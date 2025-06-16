@@ -1,0 +1,219 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'package:comment1/view_model/chat_viewmodel.dart';
+import 'package:oktoast/oktoast.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart'as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+class http_api{
+  general_api(String url,String text,List selecttext_list,String count,StreamController streamcontroller) async{
+    final request = await http.Request(
+      "POST",
+      Uri.parse(url),
+      )
+      ..body = json.encode({
+        "url":text,
+        "selecttext_list":selecttext_list,
+        "count":count
+      });
+    final response = await request.send();
+    if(response.statusCode == 200){
+      print("请求成功");
+      response.stream
+          .transform(utf8.decoder)
+          .listen((chunk) {
+        if(!streamcontroller.isClosed){
+          print("接收到片段：$chunk");
+          streamcontroller.add(chunk);
+        }
+      }).onDone((){
+        streamcontroller.close();
+        print("传输结束，数据流关闭");
+        print(streamcontroller.isClosed);
+      });
+    }
+    else{
+      print('请求失败');
+      return false;
+    }
+  }
+  postimage_api(String url,String text,String image_path,String type,StreamController streamcontroller) async{
+    final request = await http.MultipartRequest(
+        "POST",
+        Uri.parse(url),
+        )
+        ..fields['text'] = text
+        ..fields['type'] = type
+        ..files.add(await http.MultipartFile.fromPath('file',image_path));
+    final response = await request.send();
+    if(response.statusCode == 200){
+      print("请求成功");
+      response.stream
+          .transform(utf8.decoder)
+          .listen((chunk) {
+        if(!streamcontroller.isClosed){
+          print("接收到片段：$chunk");
+          streamcontroller.add(chunk);
+        }
+      }).onDone((){
+        streamcontroller.close();
+        print("传输结束，数据流关闭");
+        print(streamcontroller.isClosed);
+      });
+    }
+    else{
+      print('请求失败');
+      return false;
+    }
+  }
+  post_text(String url,String text,String type,StreamController streamcontroller) async{
+    final request = await http.Request(
+      "POST",
+      Uri.parse(url),
+      );
+    request.body = json.encode({
+      'type':type,
+      'text':text
+    });
+    final response = await request.send();
+    if(response.statusCode == 200){
+      print("请求成功");
+      response.stream
+          .transform(utf8.decoder)
+          .listen((chunk) {
+            if(!streamcontroller.isClosed){
+              print("接收到片段：$chunk");
+              streamcontroller.add(chunk);
+            }
+      }).onDone((){
+        streamcontroller.close();
+        print("传输结束，数据流关闭");
+        print(streamcontroller.isClosed);
+      });
+    }
+    else{
+      print('请求失败');
+      return false;
+    }
+  }
+  all_api(String url,String code) async{
+    final response = await http.post(
+        Uri.parse(url),
+        headers:{'Content-Type':'application/json'},
+        body: json.encode({
+          "code":code
+        })
+    );
+    if(response.statusCode == 200){
+      final data = json.decode(response.body);
+      print("data:$data");
+      return json.decode(response.body);
+    }
+    else{
+      print('请求失败');
+      return false;
+    }
+  }
+  post_content(String url,String content,String code) async{
+    final response = await http.post(
+        Uri.parse(url),
+        headers:{'Content-Type':'application/json'},
+        body: json.encode({
+          "content":content,
+          "code":code
+        })
+    );
+    if(response.statusCode == 200){
+      if(content!=""){
+        showToast("添加成功",backgroundColor: Colors.black54,position: ToastPosition.bottom,radius: 40,textStyle: TextStyle(color: Colors.white));
+      }
+      final data = json.decode(response.body);
+      print("data:$data");
+      return json.decode(response.body)['data'];
+    }
+    else{
+      print('请求失败');
+      return false;
+    }
+  }
+  get_list(String url) async{
+    final response = await http.get(
+      Uri.parse(url),
+      headers:{'Content-Type':'application/json'},
+    );
+    if(response.statusCode == 200){
+      print("请求成功");
+      print(json.decode(response.body)['data']);
+      return json.decode(response.body)['data'];
+    }
+    else{
+      print('请求失败');
+      return false;
+    }
+  }
+  post_code(String url,String code) async{
+    final response = await http.post(
+      Uri.parse(url),
+      headers:{'Content-Type':'application/json'},
+      body: json.encode({
+        "code":code
+      })
+    );
+    if(response.statusCode == 200){
+      print("请求成功");
+      print(json.decode(response.body)['data']);
+      final save_data = await SharedPreferences.getInstance();
+      save_data.setString("code", code);
+      save_data.setBool("isactive", true);
+      showToast("激活成功",backgroundColor: Colors.black54,position: ToastPosition.bottom,radius: 40,textStyle: TextStyle(color: Colors.white));
+
+      return json.decode(response.body)['data'];
+    }
+    else{
+      print('请求失败');
+      return false;
+    }
+  }
+  get_excel(String url,String name) async{
+    final response = await http.get(
+      Uri.parse(url),
+      headers:{'Content-Type':'application/json'},
+    );
+    if(response.statusCode == 200){
+      final directory= await getApplicationDocumentsDirectory();
+      final file = File("${directory.path}/$name");
+      await file.writeAsBytes(response.bodyBytes);
+      print('Download complete');
+      OpenFile.open(file.path);
+      print("请求成功");
+      return true;
+    }
+    else{
+      print('请求失败');
+      return false;
+    }
+  }
+  switch_api(String url,List list_type,String code) async{
+    final response = await http.post(
+      Uri.parse(url),
+      headers:{'Content-Type':'application/json'},
+      body:json.encode({
+        "list_type":list_type,
+        "code":code
+      })
+    );
+    if(response.statusCode == 200){
+      final data = json.decode(response.body);
+      print("data:$data");
+      return json.decode(response.body);
+    }
+    else{
+      print('请求失败');
+      return false;
+    }
+  }
+}
