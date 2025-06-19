@@ -22,7 +22,7 @@ class filelist_viewmodel extends ChangeNotifier{
     notifyListeners();
   }
   get_filelist() async{
-    _filelist_model.file_dict = await http_api().get_list("http://124.70.183.83:8005/comment/get_filelist/");
+    _filelist_model.file_dict = await http_api().get_list("http://139.196.235.10:8005/comment/get_filelist/");
     notifyListeners();
   }
 }

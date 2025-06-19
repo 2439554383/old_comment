@@ -28,7 +28,7 @@ class _setting_typeState extends State<setting_type> {
       listview_provider.get_list(code!);
       print(code);
     }
-    else{     print("未获得code");}
+    else{print("未获得code");}
   }
   @override
   void dispose() {
@@ -50,45 +50,41 @@ class _setting_typeState extends State<setting_type> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Flexible(
-                  flex: 12,
-                  child: Container(
-                    child: SingleChildScrollView(
-                      child: Column(
-                      children: [
-                        ExpansionTile(
-                            title: Text("评论类型"),
-                            children:
-                            List.generate(
-                              listview_provider.type_list.length,
-                                  (index) => CheckboxListTile(
-                                    title: Text(listview_provider.type_list[index][1]), value: listview_provider.type_list[index][2], onChanged: (value) async{
-                                        await listview_provider.switch_type_isset(value!, index);
-                                  },
-                                  ),
-                            ),
-                        ),
-                      ],
+                  Expanded(
+                    child: Container(
+                      child: SingleChildScrollView(
+                        child: Column(
+                        children: [
+                          ExpansionTile(
+                              title: Text("评论类型"),
+                              children:
+                              List.generate(
+                                listview_provider.type_list.length,
+                                    (index) => CheckboxListTile(
+                                      title: Text(listview_provider.type_list[index][1]), value: listview_provider.type_list[index][2], onChanged: (value) async{
+                                          await listview_provider.switch_type_isset(value!, index);
+                                    },
                                     ),
+                              ),
+                          ),
+                        ],
+                                      ),
+                      ),
                     ),
                   ),
-                ),
-                Flexible(
-                  flex: 2,
-                  child: Column(
-                    children: [
-                      Container(
-                          width:100,
-                          height:55,
-                          child: FloatingActionButton(
-                            onPressed: () async{
-                              listview_provider.switch_comfirm(code);
-                              Navigator.of(context).pop();
-                            },
-                            child: Text("确定",style: TextStyle(fontSize: 18),),)),
-                      SizedBox(height: 40,)
-                    ],
-                  ),
+                Column(
+                  children: [
+                    Container(
+                        width:MediaQuery.of(context).size.width*0.27,
+                        height:MediaQuery.of(context).size.height*0.07,
+                        child: FloatingActionButton(
+                          onPressed: () async{
+                            listview_provider.switch_comfirm(code);
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("确定",style: TextStyle(fontSize: 18),),)),
+                    SizedBox(height: 40,)
+                  ],
                 ),
               ]
             ),

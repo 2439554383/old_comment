@@ -11,8 +11,6 @@ class hospital_view extends StatefulWidget {
 }
 
 class _hospital_viewState extends State<hospital_view> {
-  late double fullwidth = MediaQuery.of(context).size.width;
-  late double fullheight = MediaQuery.of(context).size.height;
   late hospital_viewmodel _hospital_provider;
   @override
   void initState() {
@@ -28,6 +26,8 @@ class _hospital_viewState extends State<hospital_view> {
   }
   @override
   Widget build(BuildContext context) {
+    double fullwidth = MediaQuery.of(context).size.width;
+    double fullheight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Center(
         child: Container(
@@ -57,7 +57,7 @@ class _hospital_viewState extends State<hospital_view> {
                       spacing: 15,
                       children: List.generate(_hospital_provider.hospital_list.length, (index){
                         return Container(
-                          height: 100,
+                          height: fullheight*0.15,
                           padding: EdgeInsets.all(10),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),

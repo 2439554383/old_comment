@@ -13,6 +13,6 @@ class content_viewmodel extends ChangeNotifier{
   post_content(String content) async{
     final sp = await SharedPreferences.getInstance();
     final code = sp.getString("code");
-    _content_model.contentlist= await http_api().post_content("http://124.70.183.83:8005/comment/post_content/",content,code!);
+    _content_model.contentlist= await http_api().post_content("http://139.196.235.10:8005/comment/post_content/",content,code!);
   }
 }

@@ -40,6 +40,7 @@ class _file_viewState extends State<file_view> with SingleTickerProviderStateMix
         child: Container(
           child: SingleChildScrollView(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               spacing: 10,
               children: [
                 ...List.generate(filelist_provider.text_list.length, (index){

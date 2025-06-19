@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:ui';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:comment1/view_model/content_viewmodel.dart';
 import 'package:comment1/view_model/overlay_viewmodel.dart';
 import 'package:comment1/view_model/textfield_viewmodel.dart';
@@ -29,9 +31,18 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
   late TextEditingController textEditingController1 = TextEditingController();
   late TextEditingController textEditingController2 = TextEditingController();
   late TextEditingController textEditingController3 = TextEditingController();
-  late double fullwidth = MediaQuery.of(context).size.width;
-  late double fullheight = MediaQuery.of(context).size.height;
-
+  int getHalfScreenHeight() {
+    final screenHeight = window.physicalSize.height;
+    final pixelRatio = window.devicePixelRatio;
+    final logicalHeight = screenHeight / pixelRatio;
+    return (logicalHeight / 2).toInt();
+  }
+  final double screenHeight = window.physicalSize.height;
+  late final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
+  late var adjustedHeight;
+  late double fullheight = MediaQuery.sizeOf(context).height;
+  late double fullheight1 = 2400;
+  double wid = 0 ;
   @override
   void initState() {
     // TODO: implement initState
@@ -56,14 +67,31 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
         listview_provider.type_overlay_list = event['type_overlay_list'];
         listview_provider.isloadlist = true;
       }
+      else if(event["type"] == "size"){
+        print('listview:$event');
+        setState(() {
+          final heig = event["size"];
+          final heig1 = event["size1"];
+          print("heig:$heig");
+          fullheight = heig.toDouble();
+          print("heig1:$heig1");
+          fullheight1 = heig1.toDouble();
+        });
+        listview_provider.type_overlay_list = event['type_overlay_list'] ?? [];
+        listview_provider.isloadlist = true;
+      }
     });
 
   }
   post_comment(String ts1,String st2) {
     setState(() {
+      List post_list= [];
       listview_provider.comment_list.add(ts1);
-      future_comment = textfield_provider.get_comment(textEditingController.text,listview_provider.comment_list,st2);
+      post_list = List.from(listview_provider.comment_list);
+      print("post_list: $post_list");
       listview_provider.comment_list.remove(ts1);
+      future_comment = textfield_provider.get_comment(textEditingController.text,post_list,st2,);
+
     });
   }
   close_windows()async{
@@ -81,31 +109,117 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+    late double fullwidth = MediaQuery.sizeOf(context).width;;
+    print(fullwidth);
+    print(fullheight);
+    if(fullheight>620 && fullheight<650 && fullheight1>1700){
+      print("fullheigh77t:$fullheight");
+      setState(() {
+        adjustedHeight =
+            wid = fullwidth*0.4;
+        (((1100 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
+            .ceil();
+      });
+    }
+    else if(fullheight>570 && fullheight<620 && fullheight1>1700){
+      print("fullheight12:$fullheight");
+      setState(() {
+        adjustedHeight =
+            wid = fullwidth*0.4;
+            (((1000 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
+                .ceil();
+      });
+    }
+    else if(fullheight>650 && fullheight<750 && fullheight1>1700){
+      print("fullheight53:$fullheight");
+      setState(() {
+        wid = fullwidth*0.4;
+        adjustedHeight =
+            (((1200 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
+                .ceil();
+      });
+    }
+    else if(fullheight>750 && fullheight<900 && fullheight1>1700){
+      print("fullheight232:$fullheight");
+      setState(() {
+        wid = fullwidth*0.4;
+        adjustedHeight =
+            (((1300 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
+                .ceil();
+      });
+    }
+    else if(fullheight>900 && fullheight<1000 && fullheight1>1700){
+      print("fullheight754:$fullheight");
+      setState(() {
+        wid = fullwidth*0.4;
+        adjustedHeight =
+            (((1400 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
+                .ceil();
+      });
+    }
+    else if(fullheight>1000 && fullheight1>1700){
+      print("fullheight46:$fullheight");
+      setState(() {
+        wid = fullwidth*0.4;
+        adjustedHeight =
+            (((1550 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
+                .ceil();
+      });
+    }
+    else if(fullheight>540 && fullheight<570 && fullheight1>1700){
+      print("fullheight33:$fullheight");
+      setState(() {
+        wid = fullwidth*0.4;
+        adjustedHeight =
+            (((900 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
+                .ceil();
+      });
+    }
+    else if(fullheight<540 && fullheight1>1700){
+      print("fullheight54:$fullheight");
+      setState(() {
+        wid = fullwidth*0.4;
+        adjustedHeight =
+            (((800 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
+                .ceil();
+      });
+    }
+    else{
+      setState(() {
+        print("fullheight55555:$fullheight");
+        wid = fullwidth*0.3;
+        adjustedHeight =
+        (((800 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
+            .ceil();
+      });
+    }
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Center(
         child: Consumer<overlay_viewmodel>(
         builder: (BuildContext context, value, Widget? child) {
-            return overlay_provider.isvisiable?
-            Center(
+            return overlay_provider.isvisiable ? Center(
               child: GestureDetector(
                 onTap: () async{
                     await FlutterOverlayWindow.closeOverlay();
                     overlay_provider.switch_windows(false);
-                    await FlutterOverlayWindow.showOverlay(
-                        width: WindowSize.matchParent,
-                        height: 1200 ,
-                        visibility: NotificationVisibility.visibilityPublic,
-                        alignment :OverlayAlignment.topCenter,
-                        flag: OverlayFlag.focusPointer,
-                        startPosition: OverlayPosition(0,0)
-                    );
+                    Future.delayed(Duration(milliseconds: 100),() async{
+                      await FlutterOverlayWindow.showOverlay(
+                          width: WindowSize.matchParent,
+                          height: adjustedHeight,
+                          visibility: NotificationVisibility.visibilityPublic,
+                          alignment :OverlayAlignment.topCenter,
+                          flag: OverlayFlag.focusPointer,
+                          startPosition: OverlayPosition(0,0)
+                      );
+                    });
+
                     },
                 child: Container(
                           width: double.infinity,
                           height: double.infinity,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(15),
                             color: Theme.of(context).primaryColor,
                             boxShadow: [
                               BoxShadow(
@@ -114,321 +228,326 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
                             ]
                           ),
                           alignment: Alignment.center,
-                          child: Text("生成",style: TextStyle(color: Colors.white,fontSize: 20),),
+                          child: FittedBox(child: Text("评论",style: TextStyle(color: Colors.white),)),
                         ),
               ),
             ) : Consumer<listview_viewmodel>(
-              builder: (BuildContext context, value, Widget? child) {
-               return Center(
-                child: Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey
-                          )
-                        ]
-                    ),
-                  child: Column(
-                  children: [
-                    SizedBox(height: 30,),
-                    Flexible(
-                      flex: 7,
-                      child: listview_provider.isloadlist?Container(
-                        child: GridView.builder(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.zero,
-                          scrollDirection: Axis.vertical,
-                          itemCount: listview_provider.type_overlay_list.length,
-                          itemBuilder: (conntext,index){
-                            return Row(
-                              children: [
-                                Checkbox(value: listview_provider.type_overlay_list[index][3], onChanged: (value){
-                                   listview_provider.switch_type_isset1(value!, index);
-                                }),
-                                Expanded(child: Container(child: Text(listview_provider.type_overlay_list[index][1],softWrap: true,)))
-                              ],
-                            );
-                          },
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4,childAspectRatio:6/3)),
-                      ):Container(
-                          width: double.infinity,
-                          height: double.infinity,
+                builder: (BuildContext context, value, Widget? child) {
+                 return Center(
+                  child: Container(
+                      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top+5,bottom: 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
                           color: Colors.white,
-                          alignment: Alignment.center,
-                          child: CircularProgressIndicator()),
-                    ),
-                    Flexible(
-                      flex: 2,
-                      child: TextField(
-                        controller: textEditingController1,
-                        decoration: InputDecoration(
-                          contentPadding:EdgeInsets.symmetric(horizontal: 8, vertical: 4) ,
-                          hintText: "自定义提示词",
-                          hintStyle: TextStyle(fontStyle: FontStyle.italic,),
-                        ),
-                      )
-                    ),
-                    Flexible(
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey
+                            )
+                          ]
+                      ),
+                    child: Column(
+                    children: [
+                      Flexible(
+                        flex: 7,
+                        child: listview_provider.isloadlist?Container(
+                          padding: EdgeInsets.only(top: 10),
+                          child: GridView.builder(
+                            shrinkWrap: true,
+                            padding: EdgeInsets.zero,
+                            scrollDirection: Axis.vertical,
+                            itemCount: listview_provider.type_overlay_list.length,
+                            itemBuilder: (conntext,index){
+                              return Row(
+                                children: [
+                                  Expanded(
+                                    child: Checkbox(value: listview_provider.type_overlay_list[index][3], onChanged: (value){
+                                       listview_provider.switch_type_isset1(value!, index);
+                                    }),
+                                  ),
+                                  Expanded(child: Container(child: Text(listview_provider.type_overlay_list[index][1],softWrap: true,)))
+                                ],
+                              );
+                            },
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4,childAspectRatio:6/3)),
+                        ):Container(
+                            color: Colors.white,
+                            alignment: Alignment.center,
+                            child: CircularProgressIndicator()),
+                      ),
+                      Flexible(
                         flex: 2,
                         child: TextField(
-                          controller: textEditingController2,
+                          controller: textEditingController1,
                           decoration: InputDecoration(
-                              hintText: "字数",
-                            hintStyle: TextStyle(fontStyle: FontStyle.italic),
-                            contentPadding:EdgeInsets.symmetric(horizontal: 8, vertical: 4) ,
+                            contentPadding:EdgeInsets.symmetric(horizontal: 8, vertical: 8) ,
+                            hintText: "自定义提示词",
+                            hintStyle: TextStyle(fontStyle: FontStyle.italic,),
                           ),
                         )
-                    ),
-                    child!,
-                    SizedBox(height: 5,),
-                    Flexible(
-                      flex: 2,
-                      child: Row(
-                        spacing: 20,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Flexible(
-                            child: TextButton(onPressed: () async{
-                              FocusScope.of(context).unfocus();
-                              post_comment(textEditingController1.text,textEditingController2.text);
-                              // overlay_provider.switch_windows(true);
-                              // await FlutterOverlayWindow.closeOverlay();
-                              // await FlutterOverlayWindow.showOverlay(
-                              //     width: 200,
-                              //     height: 200,
-                              //     enableDrag: true,
-                              //     alignment :OverlayAlignment.topRight,
-                              //     positionGravity: PositionGravity.auto,
-                              //     startPosition: OverlayPosition(0,200)
-                              // );
-                            },
-                                child: Text("获取"),
-                              style: ButtonStyle(
-                                fixedSize: WidgetStatePropertyAll(Size(106, 30))
-                              ),
+                      ),
+                      Flexible(
+                          flex: 2,
+                          child: TextField(
+                            controller: textEditingController2,
+                            decoration: InputDecoration(
+                                hintText: "字数",
+                              hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                              contentPadding:EdgeInsets.symmetric(horizontal: 8, vertical: 8) ,
                             ),
-                          ),
-                          Flexible(
-                            child: TextButton(onPressed: (){
-                              listview_provider.reset();
-                            }, child: Text("重置"),style: ButtonStyle(
-                                fixedSize: WidgetStatePropertyAll(Size(106, 30))
-                            ),),
-                          ),
-                          Flexible(
-                            child: TextButton(
-                                style: ButtonStyle(
-                                    fixedSize: WidgetStatePropertyAll(Size(106, 30))
+                          )
+                      ),
+                      child!,
+                      SizedBox(height: 3,),
+                      Flexible(
+                        flex: 2,
+                        child: Container(
+                          padding: EdgeInsets.only(left: 50,right: 50),
+                          child: Row(
+                            spacing: 20,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: TextButton(onPressed: () async{
+                                  FocusScope.of(context).unfocus();
+                                  post_comment(textEditingController1.text,textEditingController2.text);
+                                  // overlay_provider.switch_windows(true);
+                                  // await FlutterOverlayWindow.closeOverlay();
+                                  // await FlutterOverlayWindow.showOverlay(
+                                  //     width: 200,
+                                  //     height: 200,
+                                  //     enableDrag: true,
+                                  //     alignment :OverlayAlignment.topRight,
+                                  //     positionGravity: PositionGravity.auto,
+                                  //     startPosition: OverlayPosition(0,200)
+                                  // );
+                                },
+                                    child: FittedBox(child: Text("获取")),
+                                  style: ButtonStyle(
+                                  ),
                                 ),
-                                onPressed: ()async{
-                              await content_provider.post_content("");
-                              showDialog(
-                                  context: context,
-                                  builder: (context){
-                                    return Center(
-                                      child: Dialog(
-                                        child: Material(
-                                          borderRadius: BorderRadius.circular(20),
-                                          type: MaterialType.card,
-                                          elevation: 10,
-                                          color: CupertinoColors.secondarySystemBackground,
-                                          child: Container(
-                                            height:300,
-                                            width: fullwidth*0.65,
-                                            child: Consumer<content_viewmodel>(
-                                              builder: (BuildContext context, value, Widget? child) {
-                                                return Column(
-                                                  children: [
-                                                    SizedBox(height: 5,),
-                                                    Expanded(
-                                                      child: Container(
-                                                        width:fullwidth*0.65,
-                                                        child: ListView.builder(
-                                                            itemCount: content_provider.contentlist.length,
-                                                            itemBuilder: (context,index){
-                                                              return GestureDetector(
-                                                                onTap: () async {
-                                                                  content = content_provider.contentlist[index];
-                                                                  try {
-                            
-                                                                    await overlayChannel.invokeMethod('printMessage', {'msg': content});
-                                                                  } on PlatformException catch (e) {
-                                                                    print("发送失败: ${e.message}");
-                                                                  }
-                                                                },
-                                                                child: Container(
-                                                                  margin: EdgeInsets.all(5),
-                                                                  height: 30,
-                                                                  alignment: Alignment.center,
-                                                                  width: fullwidth,
-                                                                  decoration: BoxDecoration(
-                                                                    borderRadius: BorderRadius.circular(30),
-                                                                    color: Colors.white,
+                              ),
+                              Expanded(
+                                child: TextButton(onPressed: (){
+                                  listview_provider.reset();
+                                }, child: FittedBox(child: Text("重置")),style: ButtonStyle(
+                                ),),
+                              ),
+                              Expanded(
+                                child: TextButton(
+                                    style: ButtonStyle(
+                                    ),
+                                    onPressed: ()async{
+                                  await content_provider.post_content("");
+                                  showDialog(
+                                      context: context,
+                                      builder: (context){
+                                        return Center(
+                                          child: Dialog(
+                                            child: Material(
+                                              borderRadius: BorderRadius.circular(20),
+                                              type: MaterialType.card,
+                                              elevation: 10,
+                                              color: CupertinoColors.secondarySystemBackground,
+                                              child: Container(
+                                                height:fullheight*0.7,
+                                                width: fullwidth*0.65,
+                                                child: Consumer<content_viewmodel>(
+                                                  builder: (BuildContext context, value, Widget? child) {
+                                                    return Column(
+                                                      children: [
+                                                        Expanded(
+                                                          child: ListView.builder(
+                                                              itemCount: content_provider.contentlist.length,
+                                                              itemBuilder: (context,index){
+                                                                return GestureDetector(
+                                                                  onTap: () async {
+                                                                    content = content_provider.contentlist[index];
+                                                                    try {
+
+                                                                      await overlayChannel.invokeMethod('printMessage', {'msg': content});
+                                                                    } on PlatformException catch (e) {
+                                                                      print("发送失败: ${e.message}");
+                                                                    }
+                                                                  },
+                                                                  child: Container(
+                                                                    margin: EdgeInsets.all(5),
+                                                                    height: fullheight*0.07,
+                                                                    alignment: Alignment.center,
+                                                                    width: fullwidth,
+                                                                    decoration: BoxDecoration(
+                                                                      borderRadius: BorderRadius.circular(30),
+                                                                      color: Colors.white,
+                                                                    ),
+                                                                    child: Text(content_provider.contentlist[index]),
                                                                   ),
-                                                                  child: Text(content_provider.contentlist[index]),
-                                                                ),
-                            
-                                                              );
-                                                            }),
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      width: fullwidth*0.6,
-                                                      height:40,
-                                                      child: TextField(
-                                                        controller: textEditingController3,
-                                                        decoration: InputDecoration(
-                                                            filled: true,
-                                                            fillColor: Colors.white,
-                                                            enabledBorder: OutlineInputBorder(
-                                                                borderRadius: BorderRadius.circular(20),
-                                                                borderSide: BorderSide(color: CupertinoColors.secondarySystemBackground)
-                                                            ),
-                                                            focusedBorder: OutlineInputBorder(
-                                                                borderRadius: BorderRadius.circular(20),
-                                                                borderSide: BorderSide(color: CupertinoColors.secondarySystemBackground)
-                                                            ),
-                                                            suffixIcon: TextButton(onPressed: (){
-                                                              FocusScope.of(context).unfocus();
-                                                              content_provider.post_content(textEditingController3.text);
-                                                              textEditingController3.clear();
-                                                              Navigator.pop(context);
-                                                            }, child: Text("添加"))
+
+                                                                );
+                                                              }),
                                                         ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(height: 10,),
-                                                  ],
-                                                ); },
+                                                        Container(
+                                                          width: fullwidth*0.6,
+                                                          height:fullheight*0.08,
+                                                          child: TextField(
+                                                            controller: textEditingController3,
+                                                            decoration: InputDecoration(
+                                                                filled: true,
+                                                                fillColor: Colors.white,
+                                                                enabledBorder: OutlineInputBorder(
+                                                                    borderRadius: BorderRadius.circular(20),
+                                                                    borderSide: BorderSide(color: CupertinoColors.secondarySystemBackground)
+                                                                ),
+                                                                focusedBorder: OutlineInputBorder(
+                                                                    borderRadius: BorderRadius.circular(20),
+                                                                    borderSide: BorderSide(color: CupertinoColors.secondarySystemBackground)
+                                                                ),
+                                                                suffixIcon: TextButton(onPressed: (){
+                                                                  FocusScope.of(context).unfocus();
+                                                                  content_provider.post_content(textEditingController3.text);
+                                                                  textEditingController3.clear();
+                                                                  Navigator.pop(context);
+                                                                }, child: Text("添加"))
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 5,),
+                                                      ],
+                                                    ); },
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ),
+                                        );
+                                      });
+                                }, child: FittedBox(child: Text("常用语句"))),
+                              ),
+
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 3,),
+                      Flexible(
+                        flex: 2,
+                        child: Container(
+                          padding: EdgeInsets.only(left: 50,right: 50),
+                          child: Row(
+                            spacing: 20,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: TextButton(
+                                  style: ButtonStyle(
+                                  ),
+                                  onPressed: () async {
+                                    content = textEditingController.text;
+                                    try {
+
+                                      await overlayChannel.invokeMethod('printMessage', {'msg': content});
+                                    } on PlatformException catch (e) {
+                                      print("发送失败: ${e.message}");
+                                    }
+                                  },
+                                  child: FittedBox(child: Text("复制")),
+                                ),
+                              ),
+                              Expanded(
+                                child: TextButton(
+                                  style: ButtonStyle(
+                                    ),
+                                  onPressed: () async{
+                                  try {
+                                    final result = await overlayChannel.invokeMethod<String>('get_board');
+                                    print("原生剪贴板内容: $result");
+                                    textEditingController.text = result!;
+                                    // 你可以把它赋值到 TextEditingController 等地方
+                                  } on PlatformException catch (e) {
+                                    print("获取剪贴板失败: ${e.message}");
+                                  }
+                                },
+                                  child: FittedBox(child: Text("粘贴")),
+                                ),
+                              ),
+                              Expanded(
+                                child: TextButton(
+                                  style: ButtonStyle(
+                                    ),
+                                  onPressed: () async{
+                                      textEditingController.clear();
+                                    },
+                                  child: FittedBox(child: Text("清空")),
+                                ),
+                              ),
+                              Expanded(
+                                child: TextButton(
+                                    style: ButtonStyle(
+                                    ),
+                                    onPressed: () async{
+                                  await FlutterOverlayWindow.closeOverlay();
+                                  Future.delayed(Duration(milliseconds: 100),() async{
+                                    await FlutterOverlayWindow.showOverlay(
+                                        width: wid.toInt(),
+                                        height: wid.toInt(),
+                                        enableDrag: true,
+                                        alignment :OverlayAlignment.topRight,
+                                        positionGravity: PositionGravity.auto,
+                                        startPosition: OverlayPosition(0,fullheight * 0.15)
                                     );
                                   });
-                            }, child: Text("常用语句")),
-                          ),
-
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 3,),
-                    Flexible(
-                      flex: 2,
-                      child: Row(
-                        spacing: 20,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Flexible(
-                            child: TextButton(
-                              style: ButtonStyle(
-                                  fixedSize: WidgetStatePropertyAll(Size(75, 30))
+                                  textfield_provider.streamcontroller.close();
+                                  textEditingController.text = "请选择评论类型后点击获取";
+                                  overlay_provider.switch_windows(true);
+                                  listview_provider.reset();
+                                }, child: FittedBox(child: Text("关闭"))),
                               ),
-                              onPressed: () async {
-                                content = textEditingController.text;
-                                try {
-
-                                  await overlayChannel.invokeMethod('printMessage', {'msg': content});
-                                } on PlatformException catch (e) {
-                                  print("发送失败: ${e.message}");
-                                }
-                              },
-                              child: Text("复制"),
-                            ),
+                            ],
                           ),
-                          Flexible(
-                            child: TextButton(
-                                style: ButtonStyle(
-                                    fixedSize: WidgetStatePropertyAll(Size(75, 30))
-                                ),
-                                onPressed: () async{
-                              try {
-                                final result = await overlayChannel.invokeMethod<String>('get_board');
-                                print("原生剪贴板内容: $result");
-                                textEditingController.text = result!;
-                                // 你可以把它赋值到 TextEditingController 等地方
-                              } on PlatformException catch (e) {
-                                print("获取剪贴板失败: ${e.message}");
-                              }
-                            }, child: Text("粘贴")),
-                          ),
-                          Flexible(
-                            child: TextButton(
-                                style: ButtonStyle(
-                                    fixedSize: WidgetStatePropertyAll(Size(75, 30))
-                                ),
-                                onPressed: () async{
-                                  textEditingController.clear();
-                                }, child: Text("清空")),
-                          ),
-
-                          Flexible(
-                            child: TextButton(
-                                style: ButtonStyle(
-                                    fixedSize: WidgetStatePropertyAll(Size(75, 30))
-                                ),
-                                onPressed: () async{
-                              await FlutterOverlayWindow.closeOverlay();
-                              await FlutterOverlayWindow.showOverlay(
-                                  width: 200,
-                                  height: 200,
-                                  enableDrag: true,
-                                  alignment :OverlayAlignment.topRight,
-                                  positionGravity: PositionGravity.auto,
-                                  startPosition: OverlayPosition(0,200)
-                              );
-                              textEditingController.text = "请选择评论类型后点击获取";
-                              overlay_provider.switch_windows(true);
-                              listview_provider.reset();
-                            }, child: Text("关闭")),
-                          ),
-                        ],
+                        ),
                       ),
+                    ]
                     ),
-                    SizedBox(height: 5,)
-
-                  ]
-                                          ),
-                ),
-              ); },
-              child: Flexible(
-                flex: 4,
-                child: Consumer<textfield_viewmodel>(
-                  builder: (BuildContext context, value, Widget? child) {
-                    textEditingController.text = textfield_provider.content;
-                    return StreamBuilder(
-                      stream: textfield_provider.streamcontroller.stream,
-                      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator(),);
-                        }
-                        else if(snapshot.connectionState == ConnectionState.active){
-                           if (snapshot.hasError) {
-                            textEditingController.text = "获取失败";
+                  ),
+                ); },
+                child: Flexible(
+                  flex: 4,
+                  child: Consumer<textfield_viewmodel>(
+                    builder: (BuildContext context, value, Widget? child) {
+                      textEditingController.text = textfield_provider.content;
+                      return StreamBuilder(
+                        stream: textfield_provider.streamcontroller.stream,
+                        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return Center(child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                FittedBox(child: CircularProgressIndicator()),
+                                SizedBox(height: 2,),
+                                AutoSizeText("正在思考中…")
+                              ],
+                            ));
                           }
-                           else if (snapshot.hasData) {
-                            textEditingController.text += snapshot.data!;
+                          else if(snapshot.connectionState == ConnectionState.active){
+                             if (snapshot.hasError) {
+                              textEditingController.text = "获取失败";
+                            }
+                             else if (snapshot.hasData) {
+                              textEditingController.text += snapshot.data!;
+                            }
                           }
-                        }
-                        return TextField(
-                          controller: textEditingController,
-                          maxLines: 10,
-                          keyboardType: TextInputType.text,
-                          decoration: InputDecoration(
-                            contentPadding:EdgeInsets.symmetric(horizontal: 8, vertical: 4) ,
-                            hintStyle: TextStyle(fontStyle: FontStyle.italic),
-                            hintText: "https://v.douyin.com/2mOjGQQiqm0/"
-                          ),
-                        );
-                      },
-                    );},
+                          return TextField(
+                            controller: textEditingController,
+                            maxLines: 10,
+                            keyboardType: TextInputType.text,
+                            decoration: InputDecoration(
+                              contentPadding:EdgeInsets.symmetric(horizontal: 8, vertical: 4) ,
+                              hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                              hintText: "https://v.douyin.com/2mOjGQQiqm0/"
+                            ),
+                          );
+                        },
+                      );},
+                  ),
                 ),
-              ),
-            );
+              );
             },
           )
       ),

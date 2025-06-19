@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:comment1/view_model/aiitem_viewmodel.dart';
 import 'package:comment1/view_model/button_viewmodel.dart';
 import 'package:comment1/view_model/content_viewmodel.dart';
@@ -16,11 +17,13 @@ import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../view_model/mainpage_viewmodel.dart';
 import '../view_model/overlay_viewmodel.dart';
 import 'package:marquee/marquee.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 class home_view extends StatefulWidget {
   const home_view({super.key});
 
@@ -29,6 +32,9 @@ class home_view extends StatefulWidget {
 }
 
 class _home_viewState extends State<home_view> with TickerProviderStateMixin{
+  late final physicalHeight = window.physicalSize.height;
+  late final overlayHeight = (physicalHeight / 2).toInt();
+  AutoSizeGroup myGroup = AutoSizeGroup();
   late AnimationController animationController = AnimationController(vsync: this,duration: Duration(seconds: 1))..repeat(reverse: true);
   late AnimationController animationController2 = AnimationController(vsync: this,duration: Duration(milliseconds: 250))..forward();
   late AnimationController animationController3 = AnimationController(vsync: this,duration: Duration(seconds: 1));
@@ -40,8 +46,6 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
   late gridview_viewmodel gridview_provider;
   late aiitem_viewmodel aiitem_privider;
   late mainpage_viewmodel mainpage_provider ;
-  late double fullwidth = MediaQuery.of(context).size.width;
-  late double fullheight = MediaQuery.of(context).size.height;
   late content_viewmodel content_provider ;
   late mine_viewmodel mine_provider ;
   late PageController pageController = PageController();
@@ -49,21 +53,33 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
   late Timer timer1 ;
   late Timer timer2 ;
   late Timer timer3;
-  late double full_width = MediaQuery.of(context).size.width;
-  late double full_height = MediaQuery.of(context).size.height;
+  double textsize = 15 ;
+  double textsize1 = 10 ;
+  double ts = 17 ;
   String text1 = "";
+  String? code;
   int i = 0;
   getlist()async{
-    print("执行");
-    final sp = await SharedPreferences.getInstance();
-    final code = sp.getString("code");
-    if(code!=null){
-      await listview_provider.get_list(code);
-      mine_provider.isactive = true;
-      print(code);
+    bool isopen = await FlutterOverlayWindow.isActive();
+    print("isopen:$isopen");
+    if(isopen){
+      print("保持按钮状态成功");
+      overlay_provider.open_overlay(false);
+      button_provider.switch_button_color(Theme.of(context).primaryColor);
     }
     else{
-      mine_provider.isactive = false;
+      overlay_provider.open_overlay(true);
+      button_provider.switch_button_color(Colors.grey);
+    }
+    print("执行");
+    final sp = await SharedPreferences.getInstance();
+    code = sp.getString("code");
+    if(code!=null){
+      await mine_provider.post_active(code!);
+      await listview_provider.get_list(code!);
+      print("code:$code");
+    }
+    else{
       print("未获得code");
     }
 
@@ -85,7 +101,7 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
     mine_provider = Provider.of<mine_viewmodel>(context,listen: false);
     timer1 = Timer.periodic(Duration(seconds: 10), (timer){
       i+=1;
-      if(i==3){
+      if(i==2){
         i=0;
         pageController.jumpToPage(i);
       }
@@ -169,8 +185,52 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
     // timer3.cancel();
     super.dispose();
   }
+  post_size(double height,double height1) async{
+    await FlutterOverlayWindow.shareData(
+      {'type':"size",
+        "size":height,
+        "size1":height1
+      }
+    );
+  }
   @override
   Widget build(BuildContext context) {
+    late double fullwidth = MediaQuery.sizeOf(context).width;;
+    late double fullheight = MediaQuery.sizeOf(context).height;
+    final size = MediaQuery.of(context).size; // 逻辑像素（dp）
+    final pixelRatio = MediaQuery.of(context).devicePixelRatio; // 像素比
+    final logicalWidth = size.width;
+    final logicalHeight = size.height;
+    final physicalWidth = logicalWidth * pixelRatio;
+    final physicalHeight = logicalHeight * pixelRatio;
+    double wid = fullwidth*0.4;
+    if(physicalHeight<1700){
+      wid = fullwidth*0.3;
+    }
+    post_size(fullheight,physicalHeight);
+    print(fullwidth);
+    print(fullheight);
+    if(fullheight > 620 && fullheight < 700){
+      setState(() {
+        textsize = 10;
+        textsize1 = 10;
+        ts = 13;
+      });
+    }
+    else if(fullheight<620){
+      setState(() {
+        textsize = 8;
+        textsize1 = 8;
+        ts = 12;
+      });
+    }
+    else{
+      setState(() {
+        textsize = 13;
+        textsize1 = 13;
+        ts = 15;
+      });
+    }
     return Scaffold(
       body: Center(
         child: Container(
@@ -208,7 +268,7 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                                 ..setEntry(3, 2, 0.001)
                                 ..rotateY(animationController3.value* 2 * 3.1415926),
                               child: Container(
-                              child: ClipRRect(child: Image.asset("assets/images/appicon.jpg",width: 60,height: 60,fit: BoxFit.cover,),borderRadius: BorderRadius.circular(25),),
+                              child: ClipRRect(child: Image.asset("assets/images/appicon.png",width: 60,height: 60,fit: BoxFit.cover,),borderRadius: BorderRadius.circular(25),),
                                                       ),
                             );},
                         ),
@@ -216,33 +276,37 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                       ],
                     ),
                     Container(
-                      width: full_width,
+                      width: fullwidth,
                       height: 20,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(CupertinoIcons.volume_up),
                           SizedBox(width: 10,),
-                          Expanded(child: Marquee(text: "一键生成高质量的社交媒体评论，让你在社交平台上显得更聪明、更风趣，高情商回复，同时大幅提升互动效率。"))
+                          Expanded(child: Marquee(text: "一款基于deep seek一键生成高质量趣评的工具！趣评点击率高会自动置顶，让更多人看到你！"))
                         ],
                       ),
                     ),
                     Consumer<pageview_viewmodel>(
                       builder: (BuildContext context, value, Widget? child) {
                       return Container(
-                        height: 150,
+                        height: fullheight*0.18,
                         decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(20)
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
                         ),
                         clipBehavior: Clip.hardEdge,
                         child: PageView.builder(
-                          itemCount: pageview_provider.image_list.length,
+                          itemCount: pageview_provider.text_list.length,
                             controller: pageController,
                             itemBuilder: (context,index){
-                              return Container(
-                                child: Image.asset(pageview_provider.image_list[index],fit: BoxFit.cover,),
-                              );
+                            return Container(
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.all(15),
+                              child: AutoSizeText(
+                                pageview_provider.text_list[index]
+                              )
+                            );
                             }),
                       ); },
                     ),
@@ -293,8 +357,8 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                                           //     scrollController.animateTo(1100, duration: Duration(milliseconds: 100), curve: Curves.linear);
                                           // case 4:
                                           //   Navigator.of(context).pushNamed("/file_view",arguments: {"initindex":7});
-                                          case 5:
-                                            Navigator.of(context).pushNamed("/file_view");
+                                          // case 5:
+                                          //   Navigator.of(context).pushNamed("/file_view");
                                           // case 6:
                                           //   mainpage_provider.current_index = 1;
                                           // case 7:
@@ -303,9 +367,8 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                                       },
                                       child: Column(
                                         children: [
-                                          gridview_provider.icon_list[index],
-                                          Text(gridview_provider.text_list[index],style: TextStyle(fontSize: 13,color: Color.fromARGB(
-                                              255, 58, 58, 58)),softWrap: true,)
+                                          Expanded(child: FittedBox(child:  gridview_provider.icon_list[index],)),
+                                          Expanded(child: AutoSizeText(gridview_provider.text_list[index],style: TextStyle(color: Colors.black),maxLines: 1,group: myGroup,minFontSize: 8,))
                                         ],
                                       ))
                                 ),
@@ -316,7 +379,7 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                     ),
 
                     Container(
-                      height: 70,
+                      height: fullheight*0.1,
                       child: ElevatedButton(
                         onPressed: () {
                           if(mine_provider.isactive){
@@ -327,7 +390,7 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                                   backgroundColor: Colors.white,
                                   child: Container(
                                     width: fullwidth*0.7,
-                                    height: fullheight*0.35,
+                                    height: fullheight*0.28,
                                     padding: EdgeInsets.all(20),
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.center,
@@ -336,12 +399,12 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                                           builder: (BuildContext context, value, Widget? child) {
                                             return Container(
                                               width: double.infinity,
-                                              height: 70,
+                                              height: fullheight*0.07,
                                               child: ElevatedButton(
                                                 style: ButtonStyle(
                                                     shape: WidgetStatePropertyAll(
                                                         RoundedRectangleBorder(
-                                                            borderRadius: BorderRadius.circular(20)
+                                                            borderRadius: BorderRadius.circular(40)
                                                         )
                                                     ),
                                                     backgroundColor: WidgetStatePropertyAll(button_provider.button_color)
@@ -376,12 +439,12 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                                                       button_provider.switch_button_color(Theme.of(context).primaryColor);
                                                       overlay_provider.open_overlay(false);
                                                       await FlutterOverlayWindow.showOverlay(
-                                                          width: 200,
-                                                          height: 200,
+                                                          width: wid.toInt(),
+                                                          height: wid.toInt(),
                                                           enableDrag: true,
                                                           alignment :OverlayAlignment.topRight,
                                                           positionGravity: PositionGravity.auto,
-                                                          startPosition: OverlayPosition(0,200)
+                                                          startPosition: OverlayPosition(0,fullheight * 0.15)
                                                       );
                                                       await FlutterOverlayWindow.shareData({
                                                         "type":"listview",
@@ -421,14 +484,14 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                                         Consumer<button_viewmodel>(
                                           builder: (BuildContext context, value, Widget? child) {
                                             return Container(
-                                              height: 70,
+                                              height: fullheight*0.07,
                                               child: ElevatedButton(
                                                 onPressed: () { Navigator.of(context).pushNamed("/setting_type") ; },
                                                 style: ButtonStyle(
                                                     backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
                                                     shape: WidgetStatePropertyAll(
                                                         RoundedRectangleBorder(
-                                                            borderRadius: BorderRadius.circular(20)
+                                                            borderRadius: BorderRadius.circular(40)
                                                         )
                                                     )
                                                 ),
@@ -472,7 +535,7 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                       ),
                     ),
                     Container(
-                      height: 70,
+                      height: fullheight*0.1,
                       child: ElevatedButton(
                         onPressed: () { Navigator.pushNamed(context, '/chat_view',arguments: {"title":"智能助手","type":"智能助手"});},
                         style: ButtonStyle(
@@ -489,6 +552,28 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                             SizedBox(),
                             Icon(HugeIcons.strokeRoundedAiChat02,size: 35,),
                             Text("智能助手",style: TextStyle(fontSize: 22),)
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: fullheight*0.1,
+                      child: ElevatedButton(
+                        onPressed: () {Navigator.of(context).pushNamed("/file_view");},
+                        style: ButtonStyle(
+                            backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
+                            shape: WidgetStatePropertyAll(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)
+                                )
+                            )
+                        ),
+                        child: Row(
+                          spacing: 15,
+                          children: [
+                            SizedBox(),
+                            Icon(Icons.text_snippet_outlined,size: 35,),
+                            Text("资料汇总",style: TextStyle(fontSize: 22),)
                           ],
                         ),
                       ),
@@ -513,7 +598,7 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                       ],
                     ),
                     Container(
-                      height: 300,
+                      height: fullheight*0.30,
                       decoration: BoxDecoration(
                           color: Colors.yellow,
                           borderRadius: BorderRadius.circular(20)
@@ -542,7 +627,7 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                                       width: double.infinity,
                                       height: double.infinity,
                                       color: Colors.red,
-                                      child: Image.asset("assets/images/advertisement2.png",fit: BoxFit.cover,),
+                                      child: Image.asset("assets/images/advertisement7.png",fit: BoxFit.cover,),
                                     ),
                                   ),
                                   Flexible(

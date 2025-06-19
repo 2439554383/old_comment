@@ -11,8 +11,6 @@ class filetype_view extends StatefulWidget {
 }
 
 class _filetype_viewState extends State<filetype_view> {
-  late double fullwidth = MediaQuery.of(context).size.width;
-  late double fullheight = MediaQuery.of(context).size.height;
   late filelist_viewmodel filelist_provider;
   late var type = "";
   @override
@@ -30,6 +28,8 @@ class _filetype_viewState extends State<filetype_view> {
   }
   @override
   Widget build(BuildContext context) {
+    double fullwidth = MediaQuery.of(context).size.width;
+    double fullheight = MediaQuery.of(context).size.height;
     return Scaffold(
       body:Consumer<filelist_viewmodel>(
         builder: (BuildContext context, value, Widget? child) {
@@ -46,6 +46,7 @@ class _filetype_viewState extends State<filetype_view> {
                   ),
                   child: Column(
                       children:[
+                        SizedBox(height: MediaQuery.of(context).padding.top+20,),
                         ...List.generate(filelist.length, (index){
                           return Container(
                             child: Column(

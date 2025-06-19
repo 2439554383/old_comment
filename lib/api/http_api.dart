@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class http_api{
   general_api(String url,String text,List selecttext_list,String count,StreamController streamcontroller) async{
+    print("selecttext_list:$selecttext_list");
     final request = await http.Request(
       "POST",
       Uri.parse(url),
@@ -165,13 +166,30 @@ class http_api{
     );
     if(response.statusCode == 200){
       print("请求成功");
-      print(json.decode(response.body)['data']);
-      final save_data = await SharedPreferences.getInstance();
-      save_data.setString("code", code);
-      save_data.setBool("isactive", true);
-      showToast("激活成功",backgroundColor: Colors.black54,position: ToastPosition.bottom,radius: 40,textStyle: TextStyle(color: Colors.white));
-
-      return json.decode(response.body)['data'];
+      return true;
+    }
+    else{
+      print('请求失败');
+      return false;
+    }
+  }
+  post_active(String url,String code) async{
+    final response = await http.post(
+        Uri.parse(url),
+    );
+    if(response.statusCode == 200){
+      print("请求成功");
+      print(response.body);
+      if(response.body.contains("验证数据")){
+        final save_data = await SharedPreferences.getInstance();
+        save_data.setString("code", code);
+        save_data.setBool("isactive", true);
+        return true;
+      }
+      else{
+        // showToast(response.body,backgroundColor: Colors.black54,position: ToastPosition.bottom,radius: 40,textStyle: TextStyle(color: Colors.white));
+        return false;
+      }
     }
     else{
       print('请求失败');

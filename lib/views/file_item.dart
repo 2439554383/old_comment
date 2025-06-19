@@ -12,10 +12,10 @@ class file_item extends StatefulWidget {
 }
 
 class _file_itemState extends State<file_item> {
-  late double fullwidth = MediaQuery.of(context).size.width;
-  late double fullheight = MediaQuery.of(context).size.height;
   @override
   Widget build(BuildContext context) {
+    double fullwidth = MediaQuery.of(context).size.width;
+    double fullheight = MediaQuery.of(context).size.height;
     return GestureDetector(
       onTap: (){
         Navigator.pushNamed(context, '/filetype_view',arguments: {
@@ -27,14 +27,14 @@ class _file_itemState extends State<file_item> {
                 color: Colors.white,
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15)),
               ),
+              padding: EdgeInsets.all(20),
               width: fullwidth,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     padding: EdgeInsets.only(left: 15),
-                    height: fullheight*0.1,
                     child: Row(
                       children: [
                         Text(widget.name,style: TextStyle(fontSize: 20),),

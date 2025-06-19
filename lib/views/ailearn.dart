@@ -11,8 +11,6 @@ class ailearn extends StatefulWidget {
 }
 
 class _ailearnState extends State<ailearn> {
-  late double fullwidth = MediaQuery.of(context).size.width;
-  late double fullheight = MediaQuery.of(context).size.height;
   late filelist_viewmodel filelist_provider;
   @override
   void initState() {
@@ -27,6 +25,8 @@ class _ailearnState extends State<ailearn> {
   }
   @override
   Widget build(BuildContext context) {
+    double fullwidth = MediaQuery.of(context).size.width;
+    double fullheight = MediaQuery.of(context).size.height;
     return Scaffold(
       body:Consumer<filelist_viewmodel>(
         builder: (BuildContext context, value, Widget? child) {

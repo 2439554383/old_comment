@@ -8,19 +8,19 @@ class gridview_model{
     Icon(CupertinoIcons.heart, size: 30, color: Colors.pinkAccent.shade200),
     Icon(Icons.image, size: 30, color: Colors.deepPurple.shade500),
     Icon(HugeIcons.strokeRoundedPpt01, size: 30, color: Colors.indigoAccent.shade200),
+    Icon(Icons.video_call_outlined, size: 30, color: Colors.amberAccent.shade200),
     Icon(Icons.water_drop, size: 30, color: Colors.purple.shade400),
-    Icon(Icons.text_snippet, size: 30, color: Colors.deepPurple.shade400),
+    Icon(Icons.monochrome_photos, size: 30, color: Colors.deepPurple.shade400),
     Icon(Icons.settings_voice_rounded, size: 30, color: Colors.blueGrey.shade500),
-    Icon(Icons.add_chart, size: 30, color: Colors.amberAccent.shade200),
   ];
   List text_list = [
     "Ai换脸",
     "情感伴侣",
     "Ai生图",
     "PPT生成",
+    "Ai视频",
     "去水印",
-    "资料汇总",
+    "Ai写真",
     "智能配音",
-    "数据分析",
   ];
 }

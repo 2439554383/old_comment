@@ -26,14 +26,16 @@ class chat_viewmodel extends ChangeNotifier{
     _chat_model.isstart = isstart;
     notifyListeners();
   }
-
+  clear(){
+    _chat_model = chat_model();
+  }
   post_image(String text,String image_path,String type) async{
       _streamController = StreamController.broadcast();
-      final response = await http_api().postimage_api("http://124.70.183.83:8005/comment/get_image/", text, image_path,type,_streamController);
+      final response = await http_api().postimage_api("http://139.196.235.10:8005/comment/get_image/", text, image_path,type,_streamController);
       notifyListeners();}
 
   post_text(String text,String type) async{
     _streamController = StreamController.broadcast();
-    final response = await http_api().post_text("http://124.70.183.83:8005/comment/get_text/", text,type,_streamController);
+    final response = await http_api().post_text("http://139.196.235.10:8005/comment/get_text/", text,type,_streamController);
     notifyListeners();}
 }

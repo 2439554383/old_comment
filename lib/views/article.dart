@@ -10,8 +10,6 @@ class article extends StatefulWidget {
 class _articleState extends State<article> {
   String title = "";
   String content = "";
-  late double fullwidth = MediaQuery.of(context).size.width;
-  late double fullheight = MediaQuery.of(context).size.height;
   late ScrollController scrollController = ScrollController();
   @override
   void initState() {
@@ -28,10 +26,13 @@ class _articleState extends State<article> {
     }
   @override
   Widget build(BuildContext context) {
+    double fullwidth = MediaQuery.of(context).size.width;
+    double fullheight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Center(
         child: SafeArea(
           child: Container(
+            padding: EdgeInsets.only(top: 15),
             width:fullwidth*0.95,
             height: fullheight,
             alignment: Alignment.center,

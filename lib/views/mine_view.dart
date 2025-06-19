@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:comment1/view_model/listview_viewmodel.dart';
 import 'package:comment1/view_model/mine_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,6 +24,10 @@ class _mine_viewState extends State<mine_view> with TickerProviderStateMixin{
   late TextEditingController textEditingController = TextEditingController();
   late mine_viewmodel mine_provider;
   late listview_viewmodel listview_provider;
+  double textsize = 15 ;
+  double textsize1 = 10 ;
+  double ts = 17 ;
+  String text1 = "";
   @override
   void initState() {
     // TODO: implement initState
@@ -50,6 +55,20 @@ class _mine_viewState extends State<mine_view> with TickerProviderStateMixin{
   }
   @override
   Widget build(BuildContext context) {
+    late double fullwidth = MediaQuery.of(context).size.width;
+    late double fullheight = MediaQuery.of(context).size.height;
+    print(fullwidth);
+    print(fullheight);
+    if(fullwidth<380 || fullheight<700){
+      setState(() {
+        textsize = 12;
+      });
+    }
+    else{
+      setState(() {
+        textsize = 17;
+      });
+    }
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -85,10 +104,11 @@ class _mine_viewState extends State<mine_view> with TickerProviderStateMixin{
                           children: [
                             Container(
                                 alignment: Alignment.centerLeft,
-                                child: Text("骆旭东",style: TextStyle(fontSize: 20),)),
+                                child: Text("您的用户名",style: TextStyle(fontSize: 20),)),
+                            SizedBox(height: 2,),
                             Container(
-                              height: 30,
-                              width: 80,
+                              height: MediaQuery.of(context).size.height*0.035,
+                              width: MediaQuery.of(context).size.width*0.18,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(topRight: Radius.circular(10),bottomRight: Radius.circular(10),topLeft: Radius.circular(10),bottomLeft: Radius.circular(10))
                               ),
@@ -109,6 +129,7 @@ class _mine_viewState extends State<mine_view> with TickerProviderStateMixin{
                                             return AlertDialog(
                                                 title: Text("激活"),
                                                 content: TextField(
+                                                  autofocus: true,
                                                   controller: textEditingController,
                                                   decoration: InputDecoration(
                                                     hintText: "请输入激活码",
@@ -120,10 +141,20 @@ class _mine_viewState extends State<mine_view> with TickerProviderStateMixin{
                                                   TextButton(onPressed: () async{
                                                     FocusScope.of(context).unfocus();
                                                     Navigator.pop(context);
-                                                    mine_provider.post_code(textEditingController.text);
+                                                    bool islogin = await mine_provider.post_active(textEditingController.text);
+                                                    if(islogin){
+                                                      showToast("激活成功",backgroundColor: Colors.black54,position: ToastPosition.bottom,radius: 40,textStyle: TextStyle(color: Colors.white));
+                                                    }
                                                     final sp = await SharedPreferences.getInstance();
                                                     final code = sp.getString("code");
-                                                    listview_provider.get_list(code!);
+                                                    if(code!=null){
+                                                      print(code);
+                                                      await mine_provider.post_code(code);
+                                                      await listview_provider.get_list(code);
+                                                    }
+                                                    else{
+                                                      print("code为空");
+                                                    }
                                                   }, child: Text('激活')),
                                                   TextButton(onPressed: (){ Navigator.pop(context);}, child: Text('取消')),
                                                 ],
@@ -136,8 +167,8 @@ class _mine_viewState extends State<mine_view> with TickerProviderStateMixin{
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
-                                          Text("未激活",style: TextStyle(fontSize: 16,),),
-                                          Icon(CupertinoIcons.arrowtriangle_right_fill,size: 15)
+                                          AutoSizeText("未激活"),
+                                          FittedBox(child: Icon(CupertinoIcons.arrowtriangle_right_fill,size: 15))
                                         ],
                                       ),
                                     )):
@@ -157,8 +188,8 @@ class _mine_viewState extends State<mine_view> with TickerProviderStateMixin{
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
-                                          Text("已激活",style: TextStyle(fontSize: 16,),),
-                                          Icon(CupertinoIcons.arrowtriangle_right_fill,size: 15)
+                                          AutoSizeText("已激活"),
+                                          FittedBox(child: Icon(CupertinoIcons.arrowtriangle_right_fill,size: 15))
                                         ],
                                       ),
                                     ));

@@ -1,4 +1,4 @@
 class mine_model{
   String code = "";
-  bool isactive = false;
+  bool isactive = false ;
 }

@@ -24,11 +24,13 @@ class listview_viewmodel extends ChangeNotifier {
     notifyListeners();
   }
   get_list(String code) async{
-    final data =  await http_api().all_api("http://124.70.183.83:8005/comment/get_listmodel/",code);
+    final data =  await http_api().all_api("http://139.196.235.10:8005/comment/get_listmodel/",code);
     if(data["status"] ==true){
+      print("获取列表中");
       _list_view_model.type_list  = data['type_list'];
       _list_view_model.type_overlay_list  = data['type_overlay_list'];
       _list_view_model.isloadlist = true;
+      print("获取列表成功");
       print(data['type_list']);
       notifyListeners();
     }
@@ -78,7 +80,7 @@ class listview_viewmodel extends ChangeNotifier {
     notifyListeners();
   }
   switch_comfirm(String? code) async{
-    await http_api().switch_api("http://124.70.183.83:8005/comment/switch_isset/",_list_view_model.type_list,code!);
+    await http_api().switch_api("http://139.196.235.10:8005/comment/switch_isset/",_list_view_model.type_list,code!);
     notifyListeners();
   }
 

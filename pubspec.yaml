@@ -35,7 +35,6 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   flutter_overlay_window: ^0.5.0
-  flutter_foreground_task: ^9.1.0
   sensors_plus: ^6.1.1
   snake: ^0.1.0
   flutter_floating: ^1.1.0
@@ -55,21 +54,19 @@ dependencies:
   decorated_icon: ^1.2.1
   flutter_launcher_icons: ^0.14.4
   flutter_native_splash: ^2.4.6
+  permission_handler: ^12.0.0+1
+  auto_size_text: ^3.0.0
 
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/appicon.jpg"
+  image_path: "assets/images/appicon.png"
 
 flutter_native_splash:
   color: "#ffffff"
-  image: "assets/images/appicon.jpg"
+  image: "assets/images/appicon.png"
   android: true
   ios: true
-  android_gravity: fill
-
-
-
 
 dev_dependencies:
   flutter_test:
@@ -96,7 +93,6 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
-    - assets/videos/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

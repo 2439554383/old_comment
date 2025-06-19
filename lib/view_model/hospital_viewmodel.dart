@@ -27,7 +27,7 @@ class hospital_viewmodel extends ChangeNotifier{
     }
   }
   get_list() async{
-    final response = await http_api().get_list("http://124.70.183.83:8005/comment/get_hospitallist/");
+    final response = await http_api().get_list("http://139.196.235.10:8005/comment/get_hospitallist/");
     _hospital_model.hospital_List = response;
     notifyListeners();
   }

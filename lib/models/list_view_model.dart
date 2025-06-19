@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 class list_view_model{
-  late List type_list;
-  late List type_overlay_list;
+  late List type_list=[];
+  late List type_overlay_list=[];
   late List comment_list = [];
   bool isloadlist =false;
 }

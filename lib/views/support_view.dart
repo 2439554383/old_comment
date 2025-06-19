@@ -14,7 +14,7 @@ class _support_viewState extends State<support_view> {
         title: Text("客服中心"),
       ),
       body: Center(
-        child: Text("联系电话：15485820442",style: TextStyle(fontSize: 25,color: Colors.grey[700]),),
+        child: Text("微信号：abc18268878",style: TextStyle(fontSize: 25,color: Colors.grey[700]),),
       ),
     );
   }
