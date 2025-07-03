@@ -1,4 +1,6 @@
 // providers.dart
+import 'package:comment1/view_model/aiface_viewmodel.dart';
+import 'package:comment1/view_model/aiimage_viewmodel.dart';
 import 'package:comment1/view_model/button_viewmodel.dart';
 import 'package:comment1/view_model/chat_viewmodel.dart';
 import 'package:comment1/view_model/content_viewmodel.dart';
@@ -9,6 +11,8 @@ import 'package:comment1/view_model/mine_viewmodel.dart';
 import 'package:comment1/view_model/overlay_viewmodel.dart';
 import 'package:comment1/view_model/pageview_viewmodel.dart';
 import 'package:comment1/view_model/textfield_viewmodel.dart';
+import 'package:comment1/view_model/voice_clone_viewmodel.dart';
+import 'package:comment1/view_model/watermark_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

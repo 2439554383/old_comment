@@ -45,6 +45,7 @@ class mine_viewmodel extends ChangeNotifier{
       return true;
     }
     else{
+      print(response);
       print("登陆失败");
       showToast("激活码不存在或已过期",backgroundColor: Colors.black54,position: ToastPosition.bottom,radius: 40,textStyle: TextStyle(color: Colors.white));
       _mine_model.isactive = false;

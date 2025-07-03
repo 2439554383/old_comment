@@ -39,7 +39,6 @@ class http_api{
     }
     else{
       print('请求失败');
-      return false;
     }
   }
   postimage_api(String url,String text,String image_path,String type,StreamController streamcontroller) async{
@@ -68,7 +67,6 @@ class http_api{
     }
     else{
       print('请求失败');
-      return false;
     }
   }
   post_text(String url,String text,String type,StreamController streamcontroller) async{
@@ -98,7 +96,6 @@ class http_api{
     }
     else{
       print('请求失败');
-      return false;
     }
   }
   all_api(String url,String code) async{
@@ -116,7 +113,6 @@ class http_api{
     }
     else{
       print('请求失败');
-      return false;
     }
   }
   post_content(String url,String content,String code) async{
@@ -138,7 +134,6 @@ class http_api{
     }
     else{
       print('请求失败');
-      return false;
     }
   }
   get_list(String url) async{
@@ -153,7 +148,26 @@ class http_api{
     }
     else{
       print('请求失败');
-      return false;
+    }
+  }
+  post_aiface(String url,String old_image,String face_image) async{
+    final request = await http.MultipartRequest(
+      "POST",
+      Uri.parse(url),
+    )..files.add(await http.MultipartFile.fromPath("old_image",old_image))
+    ..files.add(await http.MultipartFile.fromPath("face_image",face_image))
+    ;
+    final response = await request.send();
+    if (response.statusCode == 200) {
+      // 读取响应体字符串
+      final respStr = await response.stream.bytesToString();
+      // 解析 JSON
+      final data = json.decode(respStr);
+      print('请求成功，返回数据: $data');
+      // 返回 data 里的 base64 或其他
+      return data['data'];
+    } else {
+      print('请求失败，状态码：${response.statusCode}');
     }
   }
   post_code(String url,String code) async{
@@ -170,7 +184,22 @@ class http_api{
     }
     else{
       print('请求失败');
-      return false;
+    }
+  }
+  post_aiimage(String url,String text) async{
+    final response = await http.post(
+        Uri.parse(url),
+        headers:{'Content-Type':'application/json'},
+        body: json.encode({
+          "text":text
+        })
+    );
+    if(response.statusCode == 200){
+      print("请求成功");
+      return json.decode(response.body)['data'];
+    }
+    else{
+      print('请求失败');
     }
   }
   post_active(String url,String code) async{
@@ -186,14 +215,9 @@ class http_api{
         save_data.setBool("isactive", true);
         return true;
       }
-      else{
-        // showToast(response.body,backgroundColor: Colors.black54,position: ToastPosition.bottom,radius: 40,textStyle: TextStyle(color: Colors.white));
-        return false;
-      }
     }
     else{
       print('请求失败');
-      return false;
     }
   }
   get_excel(String url,String name) async{
@@ -212,7 +236,6 @@ class http_api{
     }
     else{
       print('请求失败');
-      return false;
     }
   }
   switch_api(String url,List list_type,String code) async{
@@ -231,7 +254,23 @@ class http_api{
     }
     else{
       print('请求失败');
-      return false;
+    }
+  }
+  post_audio(var url,var text,var audiopath) async{
+    final request = http.MultipartRequest("POST", Uri.parse(url));
+    request..fields['text'] = text
+           ..files.add(await http.MultipartFile.fromPath('file',audiopath));
+    final response = await request.send();
+    if(response.statusCode == 200){
+      final data = await response.stream.bytesToString();
+      final result = json.decode(data);
+      final audio_url = result['data'];
+      print("获取音频地址为：$audio_url");
+      print(response.statusCode);
+      return audio_url;
+    }
+    else{
+      print("获取失败");
     }
   }
 }

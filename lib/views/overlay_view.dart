@@ -203,7 +203,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
                 onTap: () async{
                     await FlutterOverlayWindow.closeOverlay();
                     overlay_provider.switch_windows(false);
-                    Future.delayed(Duration(milliseconds: 100),() async{
+                    Future.delayed(Duration(milliseconds: 500),() async{
                       await FlutterOverlayWindow.showOverlay(
                           width: WindowSize.matchParent,
                           height: adjustedHeight,
@@ -483,7 +483,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
                                     ),
                                     onPressed: () async{
                                   await FlutterOverlayWindow.closeOverlay();
-                                  Future.delayed(Duration(milliseconds: 100),() async{
+                                  Future.delayed(Duration(milliseconds: 500),() async{
                                     await FlutterOverlayWindow.showOverlay(
                                         width: wid.toInt(),
                                         height: wid.toInt(),

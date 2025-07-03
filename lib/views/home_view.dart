@@ -347,22 +347,15 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                                       ),
                                       onPressed: (){
                                         switch (index){
-                                          // case 0:
-                                          //   scrollController.animateTo(200, duration: Duration(milliseconds: 100), curve: Curves.linear);
-                                          // case 1:
-                                          //   scrollController.animateTo(200, duration: Duration(milliseconds: 100), curve: Curves.easeInCirc);
-                                          // case 2:
-                                          //   scrollController.animateTo(650, duration: Duration(milliseconds: 100), curve: Curves.linear);
-                                          // case 3:
-                                          //     scrollController.animateTo(1100, duration: Duration(milliseconds: 100), curve: Curves.linear);
-                                          // case 4:
-                                          //   Navigator.of(context).pushNamed("/file_view",arguments: {"initindex":7});
-                                          // case 5:
-                                          //   Navigator.of(context).pushNamed("/file_view");
-                                          // case 6:
-                                          //   mainpage_provider.current_index = 1;
-                                          // case 7:
-                                          //   Navigator.of(context).pushNamed("/file_view",arguments: {"initindex":0});
+                                          case 0:
+                                            Navigator.pushNamed(context, "/aiface");
+                                          case 1:
+                                            Navigator.pushNamed(context, "/voice_clone");
+                                          case 2:
+                                            Navigator.pushNamed(context, "/aiimage");
+                                          case 3:
+                                            Navigator.pushNamed(context, "/watermark");
+
                                         }
                                       },
                                       child: Column(
