@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_overlay_window/flutter_overlay_window.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../view_model/listview_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,6 +23,8 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
   String text  = "";
   String content = "";
   var istrue = false;
+
+
   late overlay_viewmodel overlay_provider ;
   late listview_viewmodel listview_provider ;
   late textfield_viewmodel textfield_provider ;
@@ -116,7 +119,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
       print("fullheigh77t:$fullheight");
       setState(() {
         adjustedHeight =
-            wid = fullwidth*0.4;
+            wid = fullwidth*0.15;
         (((1100 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
             .ceil();
       });
@@ -125,7 +128,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
       print("fullheight12:$fullheight");
       setState(() {
         adjustedHeight =
-            wid = fullwidth*0.4;
+            wid = fullwidth*0.15;
             (((1000 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
                 .ceil();
       });
@@ -133,7 +136,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
     else if(fullheight>650 && fullheight<750 && fullheight1>1700){
       print("fullheight53:$fullheight");
       setState(() {
-        wid = fullwidth*0.4;
+        wid = fullwidth*0.15;
         adjustedHeight =
             (((1200 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
                 .ceil();
@@ -142,7 +145,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
     else if(fullheight>750 && fullheight<900 && fullheight1>1700){
       print("fullheight232:$fullheight");
       setState(() {
-        wid = fullwidth*0.4;
+        wid = fullwidth*0.15;
         adjustedHeight =
             (((1300 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
                 .ceil();
@@ -151,7 +154,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
     else if(fullheight>900 && fullheight<1000 && fullheight1>1700){
       print("fullheight754:$fullheight");
       setState(() {
-        wid = fullwidth*0.4;
+        wid = fullwidth*0.15;
         adjustedHeight =
             (((1400 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
                 .ceil();
@@ -160,7 +163,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
     else if(fullheight>1000 && fullheight1>1700){
       print("fullheight46:$fullheight");
       setState(() {
-        wid = fullwidth*0.4;
+        wid = fullwidth*0.15;
         adjustedHeight =
             (((1550 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
                 .ceil();
@@ -169,7 +172,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
     else if(fullheight>540 && fullheight<570 && fullheight1>1700){
       print("fullheight33:$fullheight");
       setState(() {
-        wid = fullwidth*0.4;
+        wid = fullwidth*0.15;
         adjustedHeight =
             (((900 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
                 .ceil();
@@ -178,7 +181,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
     else if(fullheight<540 && fullheight1>1700){
       print("fullheight54:$fullheight");
       setState(() {
-        wid = fullwidth*0.4;
+        wid = fullwidth*0.15;
         adjustedHeight =
             (((800 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
                 .ceil();
@@ -187,7 +190,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
     else{
       setState(() {
         print("fullheight55555:$fullheight");
-        wid = fullwidth*0.3;
+        wid = fullwidth*0.10;
         adjustedHeight =
         (((800 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
             .ceil();
@@ -201,18 +204,14 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
             return overlay_provider.isvisiable ? Center(
               child: GestureDetector(
                 onTap: () async{
-                    await FlutterOverlayWindow.closeOverlay();
-                    overlay_provider.switch_windows(false);
-                    Future.delayed(Duration(milliseconds: 500),() async{
-                      await FlutterOverlayWindow.showOverlay(
-                          width: WindowSize.matchParent,
-                          height: adjustedHeight,
-                          visibility: NotificationVisibility.visibilityPublic,
-                          alignment :OverlayAlignment.topCenter,
-                          flag: OverlayFlag.focusPointer,
-                          startPosition: OverlayPosition(0,0)
-                      );
-                    });
+                    // await FlutterOverlayWindow.closeOverlay();
+
+                    overlay_provider.isload = true;
+                        await FlutterOverlayWindow.resizeOverlay(WindowSize.matchParent, adjustedHeight, true);
+
+                        Future.delayed(Duration(milliseconds: 500),(){
+                          overlay_provider.switch_windows(false);
+                        });
 
                     },
                 child: Container(
@@ -228,7 +227,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
                             ]
                           ),
                           alignment: Alignment.center,
-                          child: FittedBox(child: Text("评论",style: TextStyle(color: Colors.white),)),
+                          child: overlay_provider.isload == true?SizedBox.shrink():FittedBox(child: Text("评论",style: TextStyle(color: Colors.white),)),
                         ),
               ),
             ) : Consumer<listview_viewmodel>(
@@ -482,21 +481,23 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
                                     style: ButtonStyle(
                                     ),
                                     onPressed: () async{
-                                  await FlutterOverlayWindow.closeOverlay();
-                                  Future.delayed(Duration(milliseconds: 500),() async{
-                                    await FlutterOverlayWindow.showOverlay(
-                                        width: wid.toInt(),
-                                        height: wid.toInt(),
-                                        enableDrag: true,
-                                        alignment :OverlayAlignment.topRight,
-                                        positionGravity: PositionGravity.auto,
-                                        startPosition: OverlayPosition(0,fullheight * 0.15)
-                                    );
-                                  });
-                                  textfield_provider.streamcontroller.close();
-                                  textEditingController.text = "请选择评论类型后点击获取";
-                                  overlay_provider.switch_windows(true);
-                                  listview_provider.reset();
+                                  // await FlutterOverlayWindow.closeOverlay();
+                                  // Future.delayed(Duration(milliseconds: 500),() async{
+                                  //   await FlutterOverlayWindow.showOverlay(
+                                  //       width: wid.toInt(),
+                                  //       height: wid.toInt(),
+                                  //       enableDrag: true,
+                                  //       alignment :OverlayAlignment.topRight,
+                                  //       positionGravity: PositionGravity.auto,
+                                  //       startPosition: OverlayPosition(0,fullheight * 0.15)
+                                  //   );
+                                  // });
+                                      overlay_provider.isload = false;
+                                      overlay_provider.switch_windows(true);
+                                      if(overlay_provider.isvisiable == true){
+                                        await FlutterOverlayWindow.resizeOverlay(wid.toInt(), wid.toInt(), true);
+                                      }
+
                                 }, child: FittedBox(child: Text("关闭"))),
                               ),
                             ],
