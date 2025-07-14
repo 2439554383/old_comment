@@ -59,7 +59,7 @@ dependencies:
   vision_gallery_saver: ^3.0.0
   video_player: ^2.10.0
   file_picker: ^10.2.0
-  just_audio: ^0.10.4
+  just_audio: ^0.9.46
   audio_video_progress_bar: ^2.0.3
   flutter_screenutil: ^5.9.3
 

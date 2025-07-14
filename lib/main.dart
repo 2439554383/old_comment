@@ -8,6 +8,7 @@ import 'package:comment1/views/chat_view.dart';
 import 'package:comment1/views/file_view.dart';
 import 'package:comment1/views/filetype_view.dart';
 import 'package:comment1/views/main_view.dart';
+import 'package:comment1/views/open_member.dart';
 import 'package:comment1/views/overlay_view.dart';
 import 'package:comment1/views/setting_type.dart';
 import 'package:comment1/views/support_view.dart';
@@ -23,7 +24,7 @@ import 'package:window_size/window_size.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(
+    runApp(
       buildAppWithProviders(
         OKToast(
           child: ScreenUtilInit(
@@ -71,7 +72,9 @@ main() {
                   "/aiface":(context)=>aiface(),
                   "/aiimage":(context)=>aiimage(),
                   "/watermark":(context)=>watermark(),
-                  "/voice_clone":(context)=>voice_clone()
+                  "/voice_clone":(context)=>voice_clone(),
+                  "/open_member":(context)=>open_member(),
+
                 },
                 title: "comment",
                 home: main_view(),

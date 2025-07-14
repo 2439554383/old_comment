@@ -434,11 +434,10 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                                                       await FlutterOverlayWindow.showOverlay(
                                                           width: wid.toInt(),
                                                           height: wid.toInt(),
-                                                          enableDrag: true,
+                                                          enableDrag: false,
                                                           alignment :OverlayAlignment.topRight,
                                                           positionGravity: PositionGravity.auto,
                                                           startPosition: OverlayPosition(0,fullheight * 0.15),
-                                                          flag: OverlayFlag.focusPointer,
                                                       );
                                                       await FlutterOverlayWindow.shareData({
                                                         "type":"listview",

@@ -120,7 +120,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
       setState(() {
         adjustedHeight =
             wid = fullwidth*0.15;
-        (((1100 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
+        (((1100 * 0.375* devicePixelRatio).ceilToDouble()) / devicePixelRatio)
             .ceil();
       });
     }
@@ -129,7 +129,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
       setState(() {
         adjustedHeight =
             wid = fullwidth*0.15;
-            (((1000 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
+            (((1000 * 0.375*  devicePixelRatio).ceilToDouble()) / devicePixelRatio)
                 .ceil();
       });
     }
@@ -138,7 +138,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
       setState(() {
         wid = fullwidth*0.15;
         adjustedHeight =
-            (((1200 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
+            (((1200 * 0.375*  devicePixelRatio).ceilToDouble()) / devicePixelRatio)
                 .ceil();
       });
     }
@@ -147,7 +147,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
       setState(() {
         wid = fullwidth*0.15;
         adjustedHeight =
-            (((1300 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
+            (((1300 * 0.375*  devicePixelRatio).ceilToDouble()) / devicePixelRatio)
                 .ceil();
       });
     }
@@ -156,7 +156,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
       setState(() {
         wid = fullwidth*0.15;
         adjustedHeight =
-            (((1400 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
+            (((1400 * 0.375* devicePixelRatio).ceilToDouble()) / devicePixelRatio)
                 .ceil();
       });
     }
@@ -165,7 +165,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
       setState(() {
         wid = fullwidth*0.15;
         adjustedHeight =
-            (((1550 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
+            (((1550 * 0.375*  devicePixelRatio).ceilToDouble()) / devicePixelRatio)
                 .ceil();
       });
     }
@@ -174,7 +174,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
       setState(() {
         wid = fullwidth*0.15;
         adjustedHeight =
-            (((900 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
+            (((900 * 0.375* devicePixelRatio).ceilToDouble()) / devicePixelRatio)
                 .ceil();
       });
     }
@@ -183,7 +183,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
       setState(() {
         wid = fullwidth*0.15;
         adjustedHeight =
-            (((800 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
+            (((800 * 0.375*  devicePixelRatio).ceilToDouble()) / devicePixelRatio)
                 .ceil();
       });
     }
@@ -192,7 +192,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
         print("fullheight55555:$fullheight");
         wid = fullwidth*0.10;
         adjustedHeight =
-        (((800 * devicePixelRatio).ceilToDouble()) / devicePixelRatio)
+        (((800 * 0.375* devicePixelRatio).ceilToDouble()) / devicePixelRatio)
             .ceil();
       });
     }
@@ -207,8 +207,8 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
                     // await FlutterOverlayWindow.closeOverlay();
 
                     overlay_provider.isload = true;
-                        await FlutterOverlayWindow.resizeOverlay(WindowSize.matchParent, adjustedHeight, true);
-
+                        await FlutterOverlayWindow.resizeOverlay(WindowSize.matchParent, adjustedHeight,false);
+                        await FlutterOverlayWindow.updateFlag(OverlayFlag.focusPointer);
                         Future.delayed(Duration(milliseconds: 500),(){
                           overlay_provider.switch_windows(false);
                         });
@@ -495,7 +495,8 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
                                       overlay_provider.isload = false;
                                       overlay_provider.switch_windows(true);
                                       if(overlay_provider.isvisiable == true){
-                                        await FlutterOverlayWindow.resizeOverlay(wid.toInt(), wid.toInt(), true);
+                                        await FlutterOverlayWindow.resizeOverlay(wid.toInt(), wid.toInt(), false);
+                                        await FlutterOverlayWindow.updateFlag(OverlayFlag.defaultFlag);
                                       }
 
                                 }, child: FittedBox(child: Text("关闭"))),
