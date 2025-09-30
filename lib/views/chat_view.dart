@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:comment1/view_model/chat_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
@@ -160,21 +161,38 @@ class _chat_viewState extends State<chat_view> {
                   width: fullwidth*0.95,
                   child: Column(
                     children: [
-                      ['生成菜单','查热量'].contains(type)?GestureDetector(
-                        onTap: () async{
-                          image = await ImagePicker().pickImage(source: ImageSource.gallery);
-                          if(image!=null){
-                            file = File(image!.path);
-                            chat_provider.hasimage = true;
-                          }
-                        },
-                        child: Container(
-                          padding: EdgeInsets.only(bottom: 5),
-                          width: MediaQuery.of(context).size.width,
-                          alignment: Alignment.centerRight,
-                          child: chat_provider.hasimage?ClipRRect(borderRadius:BorderRadius.circular(10),child: Image.file(file!,width: 45,height: 45,fit: BoxFit.cover,)):Icon(Icons.add_photo_alternate,size: 50,color: Theme.of(context).primaryColor,),
-                        ),
-                      ):SizedBox.shrink(),
+                      ['生成菜单','查热量'].contains(type)?Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                              padding: EdgeInsets.symmetric(horizontal: 25.w),
+                              alignment: Alignment.centerLeft,
+                              child: Text("内容由Ai生成")
+                          ),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () async{
+                                image = await ImagePicker().pickImage(source: ImageSource.gallery);
+                                if(image!=null){
+                                  file = File(image!.path);
+                                  chat_provider.hasimage = true;
+                                }
+                              },
+                              child: Container(
+                                padding: EdgeInsets.only(bottom: 5),
+                                width: MediaQuery.of(context).size.width,
+                                alignment: Alignment.centerRight,
+                                child: chat_provider.hasimage?ClipRRect(borderRadius:BorderRadius.circular(10),child: Image.file(file!,width: 45,height: 45,fit: BoxFit.cover,)):Icon(Icons.add_photo_alternate,size: 50,color: Theme.of(context).primaryColor,),
+                              ),
+                            ),
+                          )
+                        ],
+                      ):Container(
+                      padding: EdgeInsets.symmetric(horizontal: 25.w),
+                      alignment: Alignment.centerRight,
+                      child: Text("内容由Ai生成")
+                  ),
+                      SizedBox(height: 10.h,),
                       Container(
                         width: double.infinity,
                         decoration: BoxDecoration(

@@ -49,59 +49,61 @@ class _hospital_viewState extends State<hospital_view> {
                 style: TextStyle(fontSize: 20,color: Colors.black),
                 child: Consumer<hospital_viewmodel>(
                   builder: (BuildContext context, value, Widget? child) {
-                  return Container(
-                    width: fullwidth*0.9,
-                    height: fullheight,
-                    margin: EdgeInsets.only(top: 20),
-                    child: Column(
-                      spacing: 15,
-                      children: List.generate(_hospital_provider.hospital_list.length, (index){
-                        return Container(
-                          height: fullheight*0.15,
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(_hospital_provider.text_list[index],style: TextStyle(fontSize: 20),),
-                              SizedBox(width: 40,),
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: (){
-                                    _hospital_provider.get_excel(_hospital_provider.hospital_list[index]['path'],_hospital_provider.hospital_list[index]['name']);
-                                  },
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Image.asset("assets/images/excel.png",width: 35,height:35,fit:BoxFit.cover),
-                                          SizedBox(width: 5,),
-                                          Expanded(child: Text(_hospital_provider.hospital_list[index]['name'],overflow: TextOverflow.ellipsis,maxLines: 1,))
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        spacing: 5,
-                                        children: [
-                                          Icon(Icons.upload_rounded,size: 25,color: Colors.grey,),
-                                          Text("点击打开",style: TextStyle(fontSize: 15,color: Color.fromARGB(
-                                              255, 90, 90, 90)),)
-                                        ],
-                                      )
-                                    ],
-                                  )
-                                ),
-                              )
-                            ],
-                          ),
-                        );
-                      }),
-                    ),
-                  ); },
+                  return Container(child: Center(child: Text("暂未开放"),),);
+                    // Container(
+                    //   width: fullwidth*0.9,
+                    //   height: fullheight,
+                    //   margin: EdgeInsets.only(top: 20),
+                    //   child: Column(
+                    //     spacing: 15,
+                    //     children: List.generate(_hospital_provider.hospital_list.length, (index){
+                    //       return Container(
+                    //         height: fullheight*0.15,
+                    //         padding: EdgeInsets.all(10),
+                    //         decoration: BoxDecoration(
+                    //             borderRadius: BorderRadius.circular(10),
+                    //             color: Colors.white
+                    //         ),
+                    //         child: Row(
+                    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //           children: [
+                    //             Text(_hospital_provider.text_list[index],style: TextStyle(fontSize: 20),),
+                    //             SizedBox(width: 40,),
+                    //             Expanded(
+                    //               child: GestureDetector(
+                    //                   onTap: (){
+                    //                     _hospital_provider.get_excel(_hospital_provider.hospital_list[index]['path'],_hospital_provider.hospital_list[index]['name']);
+                    //                   },
+                    //                   child: Column(
+                    //                     mainAxisAlignment: MainAxisAlignment.center,
+                    //                     children: [
+                    //                       Row(
+                    //                         children: [
+                    //                           Image.asset("assets/images/excel.png",width: 35,height:35,fit:BoxFit.cover),
+                    //                           SizedBox(width: 5,),
+                    //                           Expanded(child: Text(_hospital_provider.hospital_list[index]['name'],overflow: TextOverflow.ellipsis,maxLines: 1,))
+                    //                         ],
+                    //                       ),
+                    //                       Row(
+                    //                         mainAxisAlignment: MainAxisAlignment.center,
+                    //                         spacing: 5,
+                    //                         children: [
+                    //                           Icon(Icons.upload_rounded,size: 25,color: Colors.grey,),
+                    //                           Text("点击打开",style: TextStyle(fontSize: 15,color: Color.fromARGB(
+                    //                               255, 90, 90, 90)),)
+                    //                         ],
+                    //                       )
+                    //                     ],
+                    //                   )
+                    //               ),
+                    //             )
+                    //           ],
+                    //         ),
+                    //       );
+                    //     }),
+                    //   ),
+                    // );
+                  },
                 ),
               ),
             )),

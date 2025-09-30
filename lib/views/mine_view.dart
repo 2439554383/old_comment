@@ -4,6 +4,7 @@ import 'package:comment1/view_model/listview_viewmodel.dart';
 import 'package:comment1/view_model/mine_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -90,7 +91,6 @@ class _mine_viewState extends State<mine_view> with TickerProviderStateMixin{
             height: double.infinity,
             child: SafeArea(
               child: Column(
-                spacing: 30,
                 children: [
                   Container(
                     child: Row(
@@ -104,7 +104,7 @@ class _mine_viewState extends State<mine_view> with TickerProviderStateMixin{
                           children: [
                             Container(
                                 alignment: Alignment.centerLeft,
-                                child: Text("您的用户名",style: TextStyle(fontSize: 20),)),
+                                child: Text("用户名",style: TextStyle(fontSize: 20),)),
                             SizedBox(height: 2,),
                             Container(
                               height: MediaQuery.of(context).size.height*0.035,
@@ -123,53 +123,53 @@ class _mine_viewState extends State<mine_view> with TickerProviderStateMixin{
                                       padding: WidgetStatePropertyAll(EdgeInsets.zero)
                                     ),
                                     onPressed: () {
-                                      Navigator.pushNamed(context, "/open_member");
-                                      // showDialog(
-                                      //     context: context,
-                                      //     builder: (context){
-                                      //       return AlertDialog(
-                                      //           title: Text("激活"),
-                                      //           content: TextField(
-                                      //             autofocus: true,
-                                      //             controller: textEditingController,
-                                      //             decoration: InputDecoration(
-                                      //               hintText: "请输入激活码",
-                                      //               focusColor: Colors.deepOrange,
-                                      //               contentPadding: EdgeInsets.symmetric(vertical: 4,horizontal: 8)
-                                      //             ),
-                                      //           ),
-                                      //           actions: [
-                                      //             TextButton(onPressed: () async{
-                                      //               FocusScope.of(context).unfocus();
-                                      //               Navigator.pop(context);
-                                      //               bool islogin = await mine_provider.post_active(textEditingController.text);
-                                      //               if(islogin){
-                                      //                 showToast("激活成功",backgroundColor: Colors.black54,position: ToastPosition.bottom,radius: 40,textStyle: TextStyle(color: Colors.white));
-                                      //               }
-                                      //               final sp = await SharedPreferences.getInstance();
-                                      //               final code = sp.getString("code");
-                                      //               if(code!=null){
-                                      //                 print(code);
-                                      //                 await mine_provider.post_code(code);
-                                      //                 await listview_provider.get_list(code);
-                                      //               }
-                                      //               else{
-                                      //                 print("code为空");
-                                      //               }
-                                      //             }, child: Text('激活')),
-                                      //             TextButton(onPressed: (){ Navigator.pop(context);}, child: Text('取消')),
-                                      //           ],
-                                      //
-                                      //       );
-                                      //     });
+                                      // Navigator.pushNamed(context, "/open_member");
+                                      showDialog(
+                                          context: context,
+                                          builder: (context){
+                                            return AlertDialog(
+                                                title: Text("登录"),
+                                                content: TextField(
+                                                  autofocus: true,
+                                                  controller: textEditingController,
+                                                  decoration: InputDecoration(
+                                                    hintText: "请输入登录码",
+                                                    focusColor: Colors.deepOrange,
+                                                    contentPadding: EdgeInsets.symmetric(vertical: 4,horizontal: 8)
+                                                  ),
+                                                ),
+                                                actions: [
+                                                  TextButton(onPressed: () async{
+                                                    FocusScope.of(context).unfocus();
+                                                    Navigator.pop(context);
+                                                    bool islogin = await mine_provider.post_active(textEditingController.text);
+                                                    if(islogin){
+                                                      showToast("登录成功",backgroundColor: Colors.black54,position: ToastPosition.bottom,radius: 40,textStyle: TextStyle(color: Colors.white));
+                                                    }
+                                                    final sp = await SharedPreferences.getInstance();
+                                                    final code = sp.getString("code");
+                                                    if(code!=null){
+                                                      print(code);
+                                                      await mine_provider.post_code(code);
+                                                      await listview_provider.get_list(code);
+                                                    }
+                                                    else{
+                                                      print("code为空");
+                                                    }
+                                                  }, child: Text('登录')),
+                                                  TextButton(onPressed: (){ Navigator.pop(context);}, child: Text('取消')),
+                                                ],
+
+                                            );
+                                          });
                                     },
                                     child: Container(
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
-                                          // AutoSizeText("未激活"),
-                                          AutoSizeText("未开通"),
+                                          AutoSizeText("未登录"),
+                                          // AutoSizeText("未开通"),
                                           FittedBox(child: Icon(CupertinoIcons.arrowtriangle_right_fill,size: 15))
                                         ],
                                       ),
@@ -181,16 +181,19 @@ class _mine_viewState extends State<mine_view> with TickerProviderStateMixin{
                                         )),
                                         padding: WidgetStatePropertyAll(EdgeInsets.zero)
                                     ),
-                                    onPressed: (){
-                                      showToast("你当前已激活",backgroundColor: Colors.black54,position: ToastPosition.bottom,radius: 40,textStyle: TextStyle(color: Colors.white));
-
+                                    onPressed: () async {
+                                      // Navigator.pop(context);
+                                      mine_provider.isactive = false;
+                                      showToast("退出登录",backgroundColor: Colors.black54,position: ToastPosition.bottom,radius: 40,textStyle: TextStyle(color: Colors.white));
+                                      final sp = await SharedPreferences.getInstance();
+                                      final code = sp.remove("code");
                                     },
                                     child: Container(
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
-                                          AutoSizeText("已激活"),
+                                          AutoSizeText("退出"),
                                           FittedBox(child: Icon(CupertinoIcons.arrowtriangle_right_fill,size: 15))
                                         ],
                                       ),
@@ -244,6 +247,37 @@ class _mine_viewState extends State<mine_view> with TickerProviderStateMixin{
                       ],
                     ),
                   ),
+                  SizedBox(height: 20.h,),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 10.h,),
+                          GestureDetector(
+                            onTap: (){
+                              Navigator.pushNamed(context, "/privacy_policy");
+                            },
+                            behavior: HitTestBehavior.opaque,
+                            child: Container(
+                              padding: EdgeInsets.only(left: 0.w,right: 0.w,top: 10.h,bottom: 10.h),
+                              child: Row(
+                                children: [
+                                  Text("隐私政策",style: TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w500,color:Colors.black)),
+                                  Spacer(),
+                                  Icon(CupertinoIcons.right_chevron)
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
                   // DefaultTextStyle(
                   //   style: TextStyle(color: Colors.white),
                   //   child: Container(

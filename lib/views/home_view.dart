@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:decorated_icon/decorated_icon.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_overlay_window/flutter_overlay_window.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:oktoast/oktoast.dart';
@@ -272,7 +273,7 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                                                       ),
                             );},
                         ),
-                        Text("AI趣评",style: TextStyle(fontSize: 25),)
+                        Text("AI评论员",style: TextStyle(fontSize: 25),)
                       ],
                     ),
                     Container(
@@ -283,7 +284,7 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                         children: [
                           Icon(CupertinoIcons.volume_up),
                           SizedBox(width: 10,),
-                          Expanded(child: Marquee(text: "一款基于deep seek一键生成高质量趣评的工具！趣评点击率高会自动置顶，让更多人看到你！"))
+                          Expanded(child: Marquee(text: "一款一键生成高质量趣评的工具！趣评点击率高会自动置顶，让更多人看到你！"))
                         ],
                       ),
                     ),
@@ -323,9 +324,8 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 4,
-                                mainAxisSpacing: 10,
-                                crossAxisSpacing: 10,
+                                crossAxisCount: 1,
+                                mainAxisExtent: 100.h
                             ),
                             itemCount: gridview_provider.icon_list.length,
                             itemBuilder: (context,index){
@@ -348,20 +348,21 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                                       onPressed: (){
                                         switch (index){
                                           case 0:
-                                            Navigator.pushNamed(context, "/aiface");
-                                          case 1:
-                                            Navigator.pushNamed(context, "/voice_clone");
-                                          case 2:
-                                            Navigator.pushNamed(context, "/aiimage");
-                                          case 3:
                                             Navigator.pushNamed(context, "/watermark");
+                                          //   Navigator.pushNamed(context, "/aiface");
+                                          // case 1:
+                                          //   Navigator.pushNamed(context, "/voice_clone");
+                                          // case 2:
+                                          //   Navigator.pushNamed(context, "/aiimage");
+                                          // case 3:
+                                          //   Navigator.pushNamed(context, "/watermark");
 
                                         }
                                       },
                                       child: Column(
                                         children: [
-                                          Expanded(child: FittedBox(child:  gridview_provider.icon_list[index],)),
-                                          Expanded(child: AutoSizeText(gridview_provider.text_list[index],style: TextStyle(color: Colors.black),maxLines: 1,group: myGroup,minFontSize: 8,))
+                                          gridview_provider.icon_list[index],
+                                          AutoSizeText(gridview_provider.text_list[index],style: TextStyle(color: Colors.black),maxLines: 1,group: myGroup,minFontSize: 8,)
                                         ],
                                       ))
                                 ),
@@ -370,7 +371,6 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                           ),
                       ); },
                     ),
-
                     Container(
                       height: fullheight*0.1,
                       child: ElevatedButton(
@@ -432,12 +432,12 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                                                       button_provider.switch_button_color(Theme.of(context).primaryColor);
                                                       overlay_provider.open_overlay(false);
                                                       await FlutterOverlayWindow.showOverlay(
-                                                          width: wid.toInt(),
-                                                          height: wid.toInt(),
-                                                          enableDrag: false,
-                                                          alignment :OverlayAlignment.topRight,
-                                                          positionGravity: PositionGravity.auto,
-                                                          startPosition: OverlayPosition(0,fullheight * 0.15),
+                                                        width: 150.w,
+                                                        height: 150.h,
+                                                        enableDrag: false,
+                                                        alignment :OverlayAlignment.topRight,
+                                                        positionGravity: PositionGravity.auto,
+                                                        startPosition: OverlayPosition(0,MediaQuery.of(context).size.height/8),
                                                       );
                                                       await FlutterOverlayWindow.shareData({
                                                         "type":"listview",
@@ -549,28 +549,28 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                         ),
                       ),
                     ),
-                    Container(
-                      height: fullheight*0.1,
-                      child: ElevatedButton(
-                        onPressed: () {Navigator.of(context).pushNamed("/file_view");},
-                        style: ButtonStyle(
-                            backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
-                            shape: WidgetStatePropertyAll(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)
-                                )
-                            )
-                        ),
-                        child: Row(
-                          spacing: 15,
-                          children: [
-                            SizedBox(),
-                            Icon(Icons.text_snippet_outlined,size: 35,),
-                            Text("资料汇总",style: TextStyle(fontSize: 22),)
-                          ],
-                        ),
-                      ),
-                    ),
+                    // Container(
+                    //   height: fullheight*0.1,
+                    //   child: ElevatedButton(
+                    //     onPressed: () {Navigator.of(context).pushNamed("/file_view");},
+                    //     style: ButtonStyle(
+                    //         backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
+                    //         shape: WidgetStatePropertyAll(
+                    //             RoundedRectangleBorder(
+                    //                 borderRadius: BorderRadius.circular(10)
+                    //             )
+                    //         )
+                    //     ),
+                    //     child: Row(
+                    //       spacing: 15,
+                    //       children: [
+                    //         SizedBox(),
+                    //         Icon(Icons.text_snippet_outlined,size: 35,),
+                    //         Text("资料汇总",style: TextStyle(fontSize: 22),)
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
 
 
                     // TextButton(
@@ -590,56 +590,55 @@ class _home_viewState extends State<home_view> with TickerProviderStateMixin{
                           })
                       ],
                     ),
-                    Container(
-                      height: fullheight*0.30,
-                      decoration: BoxDecoration(
-                          color: Colors.yellow,
-                          borderRadius: BorderRadius.circular(20)
-                      ),
-                      clipBehavior: Clip.hardEdge,
-                      child: Row(
-                        children: [
-                          Flexible(
-                            flex: 1,
-                            child: Container(
-                              width: double.infinity,
-                              height: double.infinity,
-                              color: Colors.green,
-                              child: Image.asset("assets/images/advertisement4.png",fit: BoxFit.cover,),
-                            ),
-                          ),
-                          Flexible(
-                            flex: 1,
-                            child: Container(
-                              color: Colors.orange,
-                              child: Column(
-                                children: [
-                                  Flexible(
-                                    flex: 1,
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: double.infinity,
-                                      color: Colors.red,
-                                      child: Image.asset("assets/images/advertisement7.png",fit: BoxFit.cover,),
-                                    ),
-                                  ),
-                                  Flexible(
-                                    flex: 1,
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: double.infinity,
-                                      color: Colors.pink,
-                                      child: Image.asset("assets/images/advertisement3.png",fit: BoxFit.cover,),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-
+                    // Container(
+                    //   height: fullheight*0.30,
+                    //   decoration: BoxDecoration(
+                    //       color: Colors.yellow,
+                    //       borderRadius: BorderRadius.circular(20)
+                    //   ),
+                    //   clipBehavior: Clip.hardEdge,
+                    //   child: Row(
+                    //     children: [
+                    //       Flexible(
+                    //         flex: 1,
+                    //         child: Container(
+                    //           width: double.infinity,
+                    //           height: double.infinity,
+                    //           color: Colors.green,
+                    //           child: Image.asset("assets/images/advertisement4.png",fit: BoxFit.cover,),
+                    //         ),
+                    //       ),
+                    //       Flexible(
+                    //         flex: 1,
+                    //         child: Container(
+                    //           color: Colors.orange,
+                    //           child: Column(
+                    //             children: [
+                    //               Flexible(
+                    //                 flex: 1,
+                    //                 child: Container(
+                    //                   width: double.infinity,
+                    //                   height: double.infinity,
+                    //                   color: Colors.red,
+                    //                   child: Image.asset("assets/images/advertisement7.png",fit: BoxFit.cover,),
+                    //                 ),
+                    //               ),
+                    //               Flexible(
+                    //                 flex: 1,
+                    //                 child: Container(
+                    //                   width: double.infinity,
+                    //                   height: double.infinity,
+                    //                   color: Colors.pink,
+                    //                   child: Image.asset("assets/images/advertisement3.png",fit: BoxFit.cover,),
+                    //                 ),
+                    //               )
+                    //             ],
+                    //           ),
+                    //         ),
+                    //       )
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

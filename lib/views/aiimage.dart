@@ -3,6 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:comment1/view_model/aiimage_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:oktoast/oktoast.dart';
@@ -107,7 +108,18 @@ class _aiimageState extends State<aiimage> {
                                                 ],
                                               ),
                                             ),
-                                            Expanded(child: Image.network(aiimage_provider.image)),
+                                            Expanded(child: Center(
+                                              child: Stack(
+                                                children: [
+                                                  Image.network(aiimage_provider.image),
+                                                  Positioned(
+                                                      bottom: 10.h,
+                                                      right: 10.w,
+                                                      child: Text("内容由Ai生成")
+                                                  )
+                                                ],
+                                              ),
+                                            )),
                                           ],
                                         );
                                       }
@@ -125,6 +137,11 @@ class _aiimageState extends State<aiimage> {
                           ],
                         )
                       ),
+                    ),
+                    SizedBox(height: 20,),
+                    Container(
+                        alignment: Alignment.centerRight,
+                        child: Text("内容由Ai生成")
                     ),
                     SizedBox(height: 20,),
                     Container(

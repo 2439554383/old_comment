@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import '../view_model/listview_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -207,7 +208,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
                     // await FlutterOverlayWindow.closeOverlay();
 
                     overlay_provider.isload = true;
-                        await FlutterOverlayWindow.resizeOverlay(WindowSize.matchParent, adjustedHeight,false);
+                        await FlutterOverlayWindow.resizeOverlay(1.0, 1.0,false);
                         await FlutterOverlayWindow.updateFlag(OverlayFlag.focusPointer);
                         Future.delayed(Duration(milliseconds: 500),(){
                           overlay_provider.switch_windows(false);
@@ -320,7 +321,7 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
                                   //     startPosition: OverlayPosition(0,200)
                                   // );
                                 },
-                                    child: FittedBox(child: Text("获取")),
+                                    child: FittedBox(child: Text("生成")),
                                   style: ButtonStyle(
                                   ),
                                 ),
@@ -436,11 +437,11 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
                               Expanded(
                                 child: TextButton(
                                   style: ButtonStyle(
+                                    backgroundColor: WidgetStatePropertyAll(Colors.orange)
                                   ),
                                   onPressed: () async {
                                     content = textEditingController.text;
                                     try {
-
                                       await overlayChannel.invokeMethod('printMessage', {'msg': content});
                                     } on PlatformException catch (e) {
                                       print("发送失败: ${e.message}");
@@ -492,14 +493,15 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
                                   //       startPosition: OverlayPosition(0,fullheight * 0.15)
                                   //   );
                                   // });
+                                      textfield_provider.streamcontroller.close();
                                       overlay_provider.isload = false;
                                       overlay_provider.switch_windows(true);
                                       if(overlay_provider.isvisiable == true){
-                                        await FlutterOverlayWindow.resizeOverlay(wid.toInt(), wid.toInt(), false);
+                                        await FlutterOverlayWindow.resizeOverlay(150, 150,false);
                                         await FlutterOverlayWindow.updateFlag(OverlayFlag.defaultFlag);
                                       }
 
-                                }, child: FittedBox(child: Text("关闭"))),
+                                }, child: FittedBox(child: Text("最小化"))),
                               ),
                             ],
                           ),
@@ -535,15 +537,33 @@ class _overlay_viewState extends State<overlay_view> with SingleTickerProviderSt
                               textEditingController.text += snapshot.data!;
                             }
                           }
-                          return TextField(
-                            controller: textEditingController,
-                            maxLines: 10,
-                            keyboardType: TextInputType.text,
-                            decoration: InputDecoration(
-                              contentPadding:EdgeInsets.symmetric(horizontal: 8, vertical: 4) ,
-                              hintStyle: TextStyle(fontStyle: FontStyle.italic),
-                              hintText: "https://v.douyin.com/2mOjGQQiqm0/"
-                            ),
+                          return Column(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: textEditingController,
+                                  maxLines: 10,
+                                  keyboardType: TextInputType.text,
+                                  decoration: InputDecoration(
+                                      contentPadding:EdgeInsets.symmetric(horizontal: 8, vertical: 4) ,
+                                      hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                                      hintText: "https://v.douyin.com/2mOjGQQiqm0/",
+                                      border: InputBorder.none
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 5.h,),
+                              Container(
+                                  padding: EdgeInsets.only(right: 20.w),
+                                  alignment: Alignment.centerRight,
+                                  child: Text("内容由Ai生成")
+                              ),
+                              SizedBox(height: 5.h,),
+                              Container(
+                                  color: Colors.black54,
+                                  height: 1,
+                              ),
+                            ],
                           );
                         },
                       );},

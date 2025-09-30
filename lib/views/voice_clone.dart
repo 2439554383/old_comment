@@ -254,7 +254,11 @@ class _voice_cloneState extends State<voice_clone> {
                         ),
                       ),
                     ),
-
+                    SizedBox(height: 20,),
+                    Container(
+                        alignment: Alignment.centerRight,
+                        child: Text("内容由Ai生成")
+                    ),
                     SizedBox(height: 20,),
                     Container(
                       width: double.infinity,

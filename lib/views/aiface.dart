@@ -4,6 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:comment1/view_model/aiface_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -145,7 +146,18 @@ class _aifaceState extends State<aiface> {
                                           ),
                                         ),
                                       ),
-                                      Expanded(child: Image.memory(aiface_provider.new_image)),
+                                      Expanded(child: Center(
+                                        child: Stack(
+                                          children: [
+                                            Image.memory(aiface_provider.new_image),
+                                            Positioned(
+                                                bottom: 10.h,
+                                                right: 10.w,
+                                                child: Text("内容由Ai生成")
+                                            )
+                                          ],
+                                        ),
+                                      )),
                                     ],
                                   );
                                 }
@@ -158,6 +170,11 @@ class _aifaceState extends State<aiface> {
                               }
                           )
                       ),
+                    ),
+                    SizedBox(height: 20,),
+                    Container(
+                        alignment: Alignment.centerRight,
+                        child: Text("内容由Ai生成")
                     ),
                     SizedBox(height: 20,),
                     Flexible(

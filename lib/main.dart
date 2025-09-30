@@ -10,6 +10,7 @@ import 'package:comment1/views/filetype_view.dart';
 import 'package:comment1/views/main_view.dart';
 import 'package:comment1/views/open_member.dart';
 import 'package:comment1/views/overlay_view.dart';
+import 'package:comment1/views/privacy/privacy_policy.dart';
 import 'package:comment1/views/setting_type.dart';
 import 'package:comment1/views/support_view.dart';
 import 'package:comment1/views/voice_clone.dart';
@@ -74,6 +75,7 @@ main() {
                   "/watermark":(context)=>watermark(),
                   "/voice_clone":(context)=>voice_clone(),
                   "/open_member":(context)=>open_member(),
+                  "/privacy_policy":(context)=>PrivacyPolicy(),
 
                 },
                 title: "comment",
@@ -90,34 +92,39 @@ void overlayMain() async{
   runApp(
     buildAppWithProviders(
       OKToast(
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-            theme: ThemeData.light().copyWith(
-                scaffoldBackgroundColor:    CupertinoColors.tertiarySystemGroupedBackground,
-                textButtonTheme: TextButtonThemeData(
-                    style: ButtonStyle(
-                        foregroundColor: WidgetStatePropertyAll(Colors.white),
-                        backgroundColor: WidgetStatePropertyAll(ThemeData.light().primaryColor),
-                        textStyle: WidgetStatePropertyAll(TextStyle(color: Colors.white))
-                    )
-                ),
-                elevatedButtonTheme: ElevatedButtonThemeData(
-                    style: ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(Colors.deepOrange),
-                        foregroundColor: WidgetStatePropertyAll(Colors.white)
-                    )
-                ),
-                bottomNavigationBarTheme: BottomNavigationBarThemeData(
-                    backgroundColor: Colors.transparent,
-                    unselectedItemColor: Colors.grey,
-                    selectedItemColor: Colors.orange,
-                    unselectedLabelStyle: TextStyle(color: Colors.black),
-                    showUnselectedLabels: true,
-                    type: BottomNavigationBarType.fixed,
-                    elevation: 0
-                )
-            ),
-          home: overlay_view()
+        child: ScreenUtilInit(
+          designSize: Size(411, 915),
+          minTextAdapt: true,
+          splitScreenMode: true,
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+              theme: ThemeData.light().copyWith(
+                  scaffoldBackgroundColor:    CupertinoColors.tertiarySystemGroupedBackground,
+                  textButtonTheme: TextButtonThemeData(
+                      style: ButtonStyle(
+                          foregroundColor: WidgetStatePropertyAll(Colors.white),
+                          backgroundColor: WidgetStatePropertyAll(ThemeData.light().primaryColor),
+                          textStyle: WidgetStatePropertyAll(TextStyle(color: Colors.white))
+                      )
+                  ),
+                  elevatedButtonTheme: ElevatedButtonThemeData(
+                      style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(Colors.deepOrange),
+                          foregroundColor: WidgetStatePropertyAll(Colors.white)
+                      )
+                  ),
+                  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+                      backgroundColor: Colors.transparent,
+                      unselectedItemColor: Colors.grey,
+                      selectedItemColor: Colors.orange,
+                      unselectedLabelStyle: TextStyle(color: Colors.black),
+                      showUnselectedLabels: true,
+                      type: BottomNavigationBarType.fixed,
+                      elevation: 0
+                  )
+              ),
+            home: overlay_view()
+          ),
         ),
       ),
     ),
